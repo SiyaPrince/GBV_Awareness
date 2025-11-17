@@ -19,18 +19,27 @@ import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
 import 'features/about/about_page.dart';
+
+// INFO SECTION
+import 'features/info/information_hub_page.dart';
 import 'features/info/blog_list_page.dart';
 import 'features/info/blog_detail_page.dart';
 import 'features/info/article_list_page.dart';
 import 'features/info/article_detail_page.dart';
 import 'features/info/dashboard_page.dart';
+
+// PRODUCT SECTION
 import 'features/product/product_overview_page.dart';
 import 'features/product/features_page.dart';
 import 'features/product/how_it_works_page.dart';
 import 'features/product/testimonials_page.dart';
 import 'features/product/faq_page.dart';
+
+// SUPPORT + CONTACT
 import 'features/support/support_page.dart';
 import 'features/contact/contact_page.dart';
+
+// LEGAL
 import 'features/legal/privacy_policy_page.dart';
 import 'features/legal/terms_page.dart';
 
@@ -43,6 +52,9 @@ final appRouter = GoRouter(
     ShellRoute(
       builder: (context, state, child) => AppShell(child: child),
       routes: [
+        // -------------------------
+        // CORE / TOP-LEVEL
+        // -------------------------
         GoRoute(
           path: '/',
           builder: (context, state) => const HomePage(),
@@ -53,8 +65,14 @@ final appRouter = GoRouter(
         ),
 
         // -------------------------
-        // INFO SECTION
+        // INFORMATION HUB
         // -------------------------
+        // Landing hub page (summary + links to blog/articles/dashboard)
+        GoRoute(
+          path: '/info',
+          builder: (context, state) => const InformationHubPage(),
+        ),
+
         GoRoute(
           path: '/info/blog',
           builder: (context, state) => const BlogListPage(),

@@ -6,10 +6,9 @@
 // - All pages inside ShellRoute render here.
 // - Ensures consistent branding + structure.
 //
-// YOU WILL MODIFY THIS FILE WHEN:
-// - Adding a logo, drawer, sidebar, or responsive layout.
-// - Adding “quick escape”, safety, or accessibility features.
-// - Adding global navigation items.
+// Responsive behaviour:
+// - Desktop: top nav bar with inline buttons.
+// - Tablet/Mobile: compact dropdown menu in AppBar.
 //
 // DO NOT put page-specific logic here.
 // =================================
@@ -25,196 +24,147 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentRoute = GoRouterState.of(context).uri.toString();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('GBV Awareness'),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth >= 900;
 
-      // Mobile Drawer Navigation
-      drawer: _AppDrawer(currentRoute: currentRoute),
+        return Scaffold(
+          appBar: AppBar(
+            title: InkWell(
+              onTap: () => context.go('/'),
+              child: const Text('GBV Awareness'),
+            ),
+            centerTitle: false,
+            // Desktop: show full nav bar
+            // Mobile/Tablet: show dropdown menu
+            actions: [
+              if (isDesktop)
+                _DesktopNavBar(currentRoute: currentRoute)
+              else
+                _MobileNavMenu(currentRoute: currentRoute),
+              const SizedBox(width: 12),
+            ],
+          ),
+          body: Column(
+            children: [
+              // Main content
+              Expanded(
+                child: Container(
+                  color: Colors.white,
+                  child: child,
+                ),
+              ),
 
-      body: Column(
-        children: [
-          Expanded(
+              // Footer
+              const _AppFooter(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// NAV CONFIG
+///////////////////////////////////////////////////////////////////////////////
+
+class _NavItem {
+  final String label;
+  final String route;
+  const _NavItem(this.label, this.route);
+}
+
+// Primary items for the top nav / dropdown
+const List<_NavItem> _primaryNavItems = [
+  _NavItem('Home', '/'),
+  _NavItem('About', '/about'),
+  _NavItem('Information Hub', '/info'),
+  _NavItem('Product', '/product'),
+  _NavItem('Support', '/support'),
+  _NavItem('Contact', '/contact'),
+];
+
+///////////////////////////////////////////////////////////////////////////////
+/// DESKTOP NAV BAR
+///////////////////////////////////////////////////////////////////////////////
+
+class _DesktopNavBar extends StatelessWidget {
+  final String currentRoute;
+  const _DesktopNavBar({required this.currentRoute});
+
+  bool _isSelected(_NavItem item) {
+    // Highlight even if on a sub-route, e.g. /info/blog/123
+    if (currentRoute == item.route) return true;
+    if (item.route == '/') return currentRoute == '/';
+    return currentRoute.startsWith('${item.route}/');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final item in _primaryNavItems)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: TextButton(
+              onPressed: () {
+                if (!_isSelected(item)) {
+                  context.go(item.route);
+                }
+              },
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    _isSelected(item) ? Theme.of(context).colorScheme.primary : null,
+              ),
+              child: Text(item.label),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// MOBILE/TABLET DROPDOWN MENU
+///////////////////////////////////////////////////////////////////////////////
+
+class _MobileNavMenu extends StatelessWidget {
+  final String currentRoute;
+  const _MobileNavMenu({required this.currentRoute});
+
+  bool _isSelected(_NavItem item) {
+    if (currentRoute == item.route) return true;
+    if (item.route == '/') return currentRoute == '/';
+    return currentRoute.startsWith('${item.route}/');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<_NavItem>(
+      icon: const Icon(Icons.menu),
+      onSelected: (item) {
+        context.go(item.route);
+      },
+      itemBuilder: (context) {
+        return _primaryNavItems.map((item) {
+          final selected = _isSelected(item);
+          return PopupMenuItem<_NavItem>(
+            value: item,
             child: Row(
               children: [
-                // Show NavigationRail only on tablet/desktop
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (constraints.maxWidth > 800) {
-                      return _AppNavRail(currentRoute: currentRoute);
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-
-                // Main content
-                Expanded(
-                  child: Container(
-                    color: Colors.white,
-                    child: child,
-                  ),
-                ),
+                if (selected)
+                  const Icon(Icons.check, size: 16)
+                else
+                  const SizedBox(width: 16),
+                const SizedBox(width: 8),
+                Text(item.label),
               ],
             ),
-          ),
-
-          // Footer
-          const _AppFooter(),
-        ],
-      ),
-    );
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// DRAWER MENU (Mobile)
-///////////////////////////////////////////////////////////////////////////////
-class _AppDrawer extends StatelessWidget {
-  final String currentRoute;
-  const _AppDrawer({required this.currentRoute});
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.deepPurple),
-            child: Text(
-              "Menu",
-              style: TextStyle(fontSize: 22, color: Colors.white),
-            ),
-          ),
-
-          _drawerItem(
-            context,
-            icon: Icons.home,
-            label: "Home",
-            route: "/",
-            currentRoute: currentRoute,
-          ),
-          _drawerItem(
-            context,
-            icon: Icons.info_outline,
-            label: "About",
-            route: "/about",
-            currentRoute: currentRoute,
-          ),
-          _drawerItem(
-            context,
-            icon: Icons.article,
-            label: "Blog",
-            route: "/blog",
-            currentRoute: currentRoute,
-          ),
-          _drawerItem(
-            context,
-            icon: Icons.menu_book,
-            label: "Articles",
-            route: "/articles",
-            currentRoute: currentRoute,
-          ),
-          _drawerItem(
-            context,
-            icon: Icons.support_agent,
-            label: "Support",
-            route: "/support",
-            currentRoute: currentRoute,
-          ),
-          _drawerItem(
-            context,
-            icon: Icons.contact_mail,
-            label: "Contact",
-            route: "/contact",
-            currentRoute: currentRoute,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _drawerItem(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String route,
-    required String currentRoute,
-  }) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(label),
-      selected: currentRoute == route,
-      onTap: () {
-        Navigator.pop(context); // closes drawer
-        context.go(route);
+          );
+        }).toList();
       },
-    );
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-/// NAVIGATION RAIL (Tablet/Desktop)
-///////////////////////////////////////////////////////////////////////////////
-class _AppNavRail extends StatelessWidget {
-  final String currentRoute;
-
-  const _AppNavRail({required this.currentRoute});
-
-  static const _routes = [
-    "/",
-    "/about",
-    "/blog",
-    "/articles",
-    "/support",
-    "/contact",
-  ];
-
-  int _selectedIndex() {
-    return _routes.indexWhere((r) => r == currentRoute).clamp(0, _routes.length - 1);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationRail(
-      selectedIndex: _selectedIndex(),
-      labelType: NavigationRailLabelType.all,
-      onDestinationSelected: (index) {
-        context.go(_routes[index]);
-      },
-      destinations: const [
-        NavigationRailDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home),
-          label: Text("Home"),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.info_outline),
-          selectedIcon: Icon(Icons.info),
-          label: Text("About"),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.article_outlined),
-          selectedIcon: Icon(Icons.article),
-          label: Text("Blog"),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.menu_book_outlined),
-          selectedIcon: Icon(Icons.menu_book),
-          label: Text("Articles"),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.support_agent_outlined),
-          selectedIcon: Icon(Icons.support_agent),
-          label: Text("Support"),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.contact_mail_outlined),
-          selectedIcon: Icon(Icons.contact_mail),
-          label: Text("Contact"),
-        ),
-      ],
     );
   }
 }
@@ -222,6 +172,7 @@ class _AppNavRail extends StatelessWidget {
 ///////////////////////////////////////////////////////////////////////////////
 /// FOOTER
 ///////////////////////////////////////////////////////////////////////////////
+
 class _AppFooter extends StatelessWidget {
   const _AppFooter();
 
@@ -244,14 +195,14 @@ class _AppFooter extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _footerLeftContent(),
-                    _footerRightContent(),
+                    _footerLeftContent(context),
+                    _footerRightContent(context),
                   ],
                 )
               else ...[
-                _footerLeftContent(),
+                _footerLeftContent(context),
                 const SizedBox(height: 12),
-                _footerRightContent(),
+                _footerRightContent(context),
               ],
 
               const SizedBox(height: 8),
@@ -273,7 +224,7 @@ class _AppFooter extends StatelessWidget {
     );
   }
 
-  Widget _footerLeftContent() {
+  Widget _footerLeftContent(BuildContext context) {
     return const Text(
       "GBV Awareness Initiative\nProviding help, education, and support.",
       style: TextStyle(
@@ -284,7 +235,7 @@ class _AppFooter extends StatelessWidget {
     );
   }
 
-  Widget _footerRightContent() {
+  Widget _footerRightContent(BuildContext context) {
     return const Row(
       children: [
         Icon(Icons.facebook, color: Colors.white70),
