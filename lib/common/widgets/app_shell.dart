@@ -87,7 +87,6 @@ class _AppShellState extends State<AppShell> {
             pinned: false,
             titleSpacing: 0,
             automaticallyImplyLeading: true,
-
             title: AnimatedOpacity(
               duration: const Duration(milliseconds: 250),
               opacity: _showAppBar ? 1 : 0,
@@ -96,13 +95,22 @@ class _AppShellState extends State<AppShell> {
           ),
 
           // --------------------------------------------------
-          // PAGE CONTENT (SELECTABLE)
+          // PAGE CONTENT (SELECTABLE, CENTERED, MAX WIDTH)
           // --------------------------------------------------
           SliverToBoxAdapter(
             child: SelectionArea(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: widget.child,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1100),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
+                    child: widget.child, // usually an AppPage
+                  ),
+                ),
               ),
             ),
           ),
@@ -185,9 +193,9 @@ class _NavBar extends StatelessWidget {
                 Text(
                   "GBV Awareness",
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
               ],
             ),
@@ -328,8 +336,8 @@ class _AppFooter extends StatelessWidget {
               Text(
                 "© 2025 GBV Awareness Project — All rights reserved",
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Colors.white.withOpacity(.75),
-                ),
+                      color: Colors.white.withOpacity(.75),
+                    ),
               ),
             ],
           );
@@ -349,9 +357,10 @@ class _AppFooter extends StatelessWidget {
         "Address: 123 Placeholder Road\n"
         "Email: contact@example.com\n"
         "Phone: +1 234 567 890",
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium!.copyWith(color: Colors.white, height: 1.4),
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: Colors.white,
+              height: 1.4,
+            ),
       ),
     );
   }
@@ -366,9 +375,9 @@ class _AppFooter extends StatelessWidget {
         Text(
           "Quick Links",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-          ),
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
         ),
         const SizedBox(height: 12),
 
@@ -409,9 +418,9 @@ class _AppFooter extends StatelessWidget {
         Text(
           "Follow Us",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-          ),
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
         ),
         const SizedBox(height: 12),
 
