@@ -14,7 +14,7 @@
 // DO NOT add UI code here — this file is for routing only.
 // =================================
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
@@ -55,14 +55,8 @@ final appRouter = GoRouter(
         // -------------------------
         // CORE / TOP-LEVEL
         // -------------------------
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
-          path: '/about',
-          builder: (context, state) => const AboutPage(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => const HomePage()),
+        GoRoute(path: '/about', builder: (context, state) => const AboutPage()),
 
         // -------------------------
         // INFORMATION HUB
@@ -141,10 +135,7 @@ final appRouter = GoRouter(
           path: '/privacy',
           builder: (context, state) => const PrivacyPolicyPage(),
         ),
-        GoRoute(
-          path: '/terms',
-          builder: (context, state) => const TermsPage(),
-        ),
+        GoRoute(path: '/terms', builder: (context, state) => const TermsPage()),
       ],
     ),
   ],
