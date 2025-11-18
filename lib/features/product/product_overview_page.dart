@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_awareness/common/models/app_features.dart';
-import 'package:gbv_awareness/common/widgets/app_page.dart';
 import 'package:gbv_awareness/common/widgets/feature_card.dart';
 import 'package:gbv_awareness/common/widgets/page_section.dart';
 import 'package:gbv_awareness/common/widgets/persona_card.dart';
@@ -11,17 +10,53 @@ class ProductOverviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppPage(
-      title: "Your Safety. Your Support.",
-      subtitle:
-          "A gentle, privacy-focused platform that helps survivors, allies, "
-          "and organisations navigate gender-based violence safely.",
-      children: [
-        _buildWhatItDoesSection(),
-        _buildWhoItsForSection(),
-        _buildKeyFeaturesPreviewSection(context),
-        _buildCTASection(context),
-      ],
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1000),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Page title
+              Text(
+                "Your Safety. Your Support.",
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Page subtitle
+              Text(
+                "A gentle, privacy-focused platform that helps survivors, allies, "
+                "and organisations navigate gender-based violence safely.",
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurface.withOpacity(0.85),
+                  height: 1.4,
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              _buildWhatItDoesSection(),
+              const SizedBox(height: 32),
+
+              _buildWhoItsForSection(),
+              const SizedBox(height: 32),
+
+              _buildKeyFeaturesPreviewSection(context),
+              const SizedBox(height: 32),
+
+              _buildCTASection(context),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
