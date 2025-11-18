@@ -160,7 +160,7 @@ class SupportPage extends StatelessWidget {
 
           const SizedBox(height: 32),
 
-          // Healthcare Resources
+          //Healthcare Resources
           Text(
             'Healthcare Services',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
