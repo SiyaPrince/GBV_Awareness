@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gbv_awareness/common/widgets/emergency_conatacts.dart';
+import 'package:gbv_awareness/common/widgets/emergency_contacts.dart';
 import 'package:gbv_awareness/common/widgets/support_resources.dart';
 import 'package:gbv_awareness/common/widgets/important_notice.dart';
 

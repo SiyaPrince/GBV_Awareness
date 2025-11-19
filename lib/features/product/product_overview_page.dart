@@ -3,7 +3,7 @@ import 'package:gbv_awareness/common/models/app_features.dart';
 import 'package:gbv_awareness/common/widgets/app_page.dart';
 import 'package:gbv_awareness/common/widgets/feature_card.dart';
 import 'package:gbv_awareness/common/widgets/page_section.dart';
-import 'package:gbv_awareness/common/widgets/persona_card.dart';
+import 'package:gbv_awareness/common/widgets/personal_card.dart';
 import 'package:gbv_awareness/common/widgets/primary_button.dart';
 import 'package:go_router/go_router.dart';
 
