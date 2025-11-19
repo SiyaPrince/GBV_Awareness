@@ -1,0 +1,12 @@
+{
+  "id": "main_product",
+  "name": "Example Product Name",
+  "description": "Long supportive description about how this product helps users access information, feel supported, and navigate options at their own pace.",
+  "imageUrl": null,
+  "features": [
+    { "title": "Feature One", "description": "Brief, supportive explanation of what this feature offers." },
+    { "title": "Feature Two", "description": "Another gentle, user-focused feature description." }
+  ],
+  "updatedAt": "2025-01-15T12:00:00Z",
+  "version": "1.0.0"
+}

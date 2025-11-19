@@ -1,0 +1,44 @@
+[
+  {
+    "id": "example_message_01",
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "message": "I am testing the contact form and would like to confirm that messages are received.",
+    "timestamp": "2025-01-15T12:00:00Z"
+  },
+  {
+    "id": "example_message_02",
+    "name": "Alex M.",
+    "email": "alex@example.com",
+    "message": "This is a sample message to check how longer notes are displayed in the dashboard.",
+    "timestamp": "2025-01-16T09:30:00Z"
+  },
+  {
+    "id": "example_message_03",
+    "name": "Sam K.",
+    "email": "sam@example.com",
+    "message": "I would like more information about local support groups and counselling options.",
+    "timestamp": "2025-01-17T14:45:00Z"
+  },
+  {
+    "id": "example_message_04",
+    "name": "Lebo",
+    "email": "lebo@example.com",
+    "message": "Please use this message to test how new submissions appear in the admin view.",
+    "timestamp": "2025-01-18T10:15:00Z"
+  },
+  {
+    "id": "example_message_05",
+    "name": "Pat",
+    "email": "pat@example.com",
+    "message": "Checking validation for required fields and timestamp handling in the system.",
+    "timestamp": "2025-01-19T16:20:00Z"
+  },
+  {
+    "id": "example_message_06",
+    "name": "Chris",
+    "email": "chris@example.com",
+    "message": "Another example entry to help with layout and loading state testing.",
+    "timestamp": "2025-01-20T11:05:00Z"
+  }
+]

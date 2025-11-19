@@ -1,0 +1,20 @@
+[
+  {
+    "id": "testimonial_1",
+    "name": "Jane Doe",
+    "role": "Community Advocate",
+    "message": "This platform helped me find clear information and support options at a time when I felt unsure of where to start.",
+    "imageUrl": null,
+    "rating": 5,
+    "timestamp": "2025-01-10T10:00:00Z"
+  },
+  {
+    "id": "testimonial_2",
+    "name": "Alex",
+    "role": null,
+    "message": "I appreciated that I could explore resources quietly and at my own pace, without feeling pressured.",
+    "imageUrl": null,
+    "rating": 4,
+    "timestamp": "2025-01-12T09:30:00Z"
+  }
+]
