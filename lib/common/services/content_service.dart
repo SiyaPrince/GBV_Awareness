@@ -1,53 +1,212 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import '../models/article.dart';
+
+// // Riverpod Provider for ContentService
+// final contentServiceProvider = Provider<ContentService>(
+//   (ref) => ContentService(),
+// );
+
+// class ContentService {
+//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+//   // Get all blog posts
+//   Stream<List<Article>> getBlogPosts() {
+//     return _firestore
+//         .collection('articles')
+//         .where('type', isEqualTo: 'blog')
+//         .orderBy('publishedAt', descending: true)
+//         .snapshots()
+//         .map(
+//           (snapshot) =>
+//               snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
+//         );
+//   }
+
+//   // Get all articles
+//   Stream<List<Article>> getArticles() {
+//     return _firestore
+//         .collection('articles')
+//         .where('type', isEqualTo: 'article')
+//         .orderBy('publishedAt', descending: true)
+//         .snapshots()
+//         .map(
+//           (snapshot) =>
+//               snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
+//         );
+//   }
+
+//   // Get featured content
+//   Stream<List<Article>> getFeaturedContent() {
+//     return _firestore
+//         .collection('articles')
+//         .where('featured', isEqualTo: true)
+//         .orderBy('publishedAt', descending: true)
+//         .limit(5)
+//         .snapshots()
+//         .map(
+//           (snapshot) =>
+//               snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
+//         );
+//   }
+
+//   // Get article by ID
+//   Future<Article?> getArticleById(String id) async {
+//     try {
+//       final doc = await _firestore.collection('articles').doc(id).get();
+//       if (doc.exists) {
+//         return Article.fromMap(doc.data()!);
+//       }
+//       return null;
+//     } catch (e) {
+//       // Error is handled by the UI, no need to print
+//       return null;
+//     }
+//   }
+
+//   // Get article by slug
+//   Future<Article?> getArticleBySlug(String slug) async {
+//     try {
+//       final query = await _firestore
+//           .collection('articles')
+//           .where('slug', isEqualTo: slug)
+//           .limit(1)
+//           .get();
+
+//       if (query.docs.isNotEmpty) {
+//         return Article.fromMap(query.docs.first.data());
+//       }
+//       return null;
+//     } catch (e) {
+//       // Error is handled by the UI, no need to print
+//       return null;
+//     }
+//   }
+
+//   // Search articles and blogs
+//   Stream<List<Article>> searchContent(String query) {
+//     return _firestore
+//         .collection('articles')
+//         .orderBy('publishedAt', descending: true)
+//         .snapshots()
+//         .map(
+//           (snapshot) => snapshot.docs
+//               .map((doc) => Article.fromMap(doc.data()))
+//               .where(
+//                 (article) =>
+//                     article.title.toLowerCase().contains(query.toLowerCase()) ||
+//                     article.summary.toLowerCase().contains(
+//                       query.toLowerCase(),
+//                     ) ||
+//                     article.tags.any(
+//                       (tag) => tag.toLowerCase().contains(query.toLowerCase()),
+//                     ),
+//               )
+//               .toList(),
+//         );
+//   }
+
+//   // Get articles by tag
+//   Stream<List<Article>> getArticlesByTag(String tag) {
+//     return _firestore
+//         .collection('articles')
+//         .where('tags', arrayContains: tag)
+//         .orderBy('publishedAt', descending: true)
+//         .snapshots()
+//         .map(
+//           (snapshot) =>
+//               snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
+//         );
+//   }
+
+//   // Get all unique tags
+//   Stream<List<String>> getAllTags() {
+//     return _firestore.collection('articles').snapshots().map((snapshot) {
+//       final allTags = <String>{};
+//       for (final doc in snapshot.docs) {
+//         final tags = List<String>.from(doc.data()['tags'] ?? []);
+//         allTags.addAll(tags);
+//       }
+//       return allTags.toList()..sort();
+//     });
+//   }
+// }
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/article.dart';
 
-// Riverpod Provider for ContentService
+/// Service instance provider
 final contentServiceProvider = Provider<ContentService>(
   (ref) => ContentService(),
 );
 
+/// Shared tags stream – used by all pages
+final tagsStreamProvider = StreamProvider.autoDispose<List<String>>((ref) {
+  final service = ref.watch(contentServiceProvider);
+  return service.getAllTags();
+});
+
+/// Shared articles stream – raw list of "article" type content
+final articlesStreamProvider = StreamProvider.autoDispose<List<Article>>((ref) {
+  final service = ref.watch(contentServiceProvider);
+  return service.getArticles();
+});
+
+/// Shared blogs stream – raw list of "blog" type content
+final blogPostsStreamProvider = StreamProvider.autoDispose<List<Article>>((
+  ref,
+) {
+  final service = ref.watch(contentServiceProvider);
+  return service.getBlogPosts();
+});
+
 class ContentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Get all blog posts
+  // Get all blog posts (no composite index needed)
   Stream<List<Article>> getBlogPosts() {
     return _firestore
         .collection('articles')
         .where('type', isEqualTo: 'blog')
-        .orderBy('publishedAt', descending: true)
         .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
-        );
+        .map((snapshot) {
+          final list = snapshot.docs
+              .map((doc) => Article.fromMap(doc.data()))
+              .toList();
+          list.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+          return list;
+        });
   }
 
-  // Get all articles
+  // Get all articles (no composite index needed)
   Stream<List<Article>> getArticles() {
     return _firestore
         .collection('articles')
         .where('type', isEqualTo: 'article')
-        .orderBy('publishedAt', descending: true)
         .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
-        );
+        .map((snapshot) {
+          final list = snapshot.docs
+              .map((doc) => Article.fromMap(doc.data()))
+              .toList();
+          list.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+          return list;
+        });
   }
 
-  // Get featured content
+  // Get featured content (no composite index needed)
   Stream<List<Article>> getFeaturedContent() {
     return _firestore
         .collection('articles')
         .where('featured', isEqualTo: true)
-        .orderBy('publishedAt', descending: true)
-        .limit(5)
         .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
-        );
+        .map((snapshot) {
+          final list = snapshot.docs
+              .map((doc) => Article.fromMap(doc.data()))
+              .toList();
+          list.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+          return list.take(5).toList();
+        });
   }
 
   // Get article by ID
@@ -58,8 +217,8 @@ class ContentService {
         return Article.fromMap(doc.data()!);
       }
       return null;
-    } catch (e) {
-      // Error is handled by the UI, no need to print
+    } catch (_) {
+      // Error is handled by the UI
       return null;
     }
   }
@@ -77,46 +236,42 @@ class ContentService {
         return Article.fromMap(query.docs.first.data());
       }
       return null;
-    } catch (e) {
-      // Error is handled by the UI, no need to print
+    } catch (_) {
+      // Error is handled by the UI
       return null;
     }
   }
 
-  // Search articles and blogs
+  // Search articles and blogs (no composite orderBy; sort in Dart)
   Stream<List<Article>> searchContent(String query) {
-    return _firestore
-        .collection('articles')
-        .orderBy('publishedAt', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => Article.fromMap(doc.data()))
-              .where(
-                (article) =>
-                    article.title.toLowerCase().contains(query.toLowerCase()) ||
-                    article.summary.toLowerCase().contains(
-                      query.toLowerCase(),
-                    ) ||
-                    article.tags.any(
-                      (tag) => tag.toLowerCase().contains(query.toLowerCase()),
-                    ),
-              )
-              .toList(),
-        );
+    final lower = query.toLowerCase();
+    return _firestore.collection('articles').snapshots().map((snapshot) {
+      final list = snapshot.docs
+          .map((doc) => Article.fromMap(doc.data()))
+          .where((article) {
+            return article.title.toLowerCase().contains(lower) ||
+                article.summary.toLowerCase().contains(lower) ||
+                article.tags.any((tag) => tag.toLowerCase().contains(lower));
+          })
+          .toList();
+      list.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+      return list;
+    });
   }
 
-  // Get articles by tag
+  // Get articles by tag (no composite index needed)
   Stream<List<Article>> getArticlesByTag(String tag) {
     return _firestore
         .collection('articles')
         .where('tags', arrayContains: tag)
-        .orderBy('publishedAt', descending: true)
         .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Article.fromMap(doc.data())).toList(),
-        );
+        .map((snapshot) {
+          final list = snapshot.docs
+              .map((doc) => Article.fromMap(doc.data()))
+              .toList();
+          list.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+          return list;
+        });
   }
 
   // Get all unique tags
@@ -127,7 +282,9 @@ class ContentService {
         final tags = List<String>.from(doc.data()['tags'] ?? []);
         allTags.addAll(tags);
       }
-      return allTags.toList()..sort();
+      final list = allTags.toList();
+      list.sort();
+      return list;
     });
   }
 }
