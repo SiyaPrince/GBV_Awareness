@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppFooter extends StatelessWidget {
   const AppFooter({super.key});
@@ -208,8 +209,14 @@ class AppFooter extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: InkWell(
-        onTap: () {
-          // TODO: open url using url_launcher if desired
+        onTap: () async {
+          final uri = Uri.parse(url);
+
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } else {
+            debugPrint("Could not launch $url");
+          }
         },
         child: Icon(icon, color: Colors.white, size: 26),
       ),
