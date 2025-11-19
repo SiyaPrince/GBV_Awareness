@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'GBV Awareness',
+      title: 'Gender Based Violence Awareness',
       theme: AppTheme.light, // central theme file
       routerConfig: appRouter, // go_router configuration
     );
