@@ -71,6 +71,8 @@ class _AppShellState extends State<AppShell> {
     final width = MediaQuery.of(context).size.width;
     final bool isDesktop = width >= 1000; // adjust 1000 to taste
 
+    const double headerHeight = 72; // consistent header height
+
     return Scaffold(
       // Drawer only on non-desktop
       drawer: isDesktop ? null : _MobileDrawer(currentRoute: currentRoute),
@@ -78,7 +80,7 @@ class _AppShellState extends State<AppShell> {
         controller: _scrollController,
         slivers: [
           // --------------------------------------------------
-          // SLIVER NAV BAR
+          // SLIVER NAV BAR (using flexibleSpace for full control)
           // --------------------------------------------------
           SliverAppBar(
             floating: true,
@@ -87,15 +89,24 @@ class _AppShellState extends State<AppShell> {
             elevation: _showAppBar ? 1 : 0,
             backgroundColor: Theme.of(context).colorScheme.primary,
             surfaceTintColor: Colors.transparent,
-            expandedHeight: _showAppBar ? 82 : 0,
-            collapsedHeight: 70,
+            expandedHeight: _showAppBar ? headerHeight : 0,
+            collapsedHeight: headerHeight,
+            toolbarHeight: headerHeight,
             pinned: false,
+            // only show leading (hamburger/back) on non-desktop
+            automaticallyImplyLeading: !isDesktop,
             titleSpacing: 0,
-            automaticallyImplyLeading: true,
-            title: AnimatedOpacity(
+            title: null,
+            flexibleSpace: AnimatedOpacity(
               duration: const Duration(milliseconds: 250),
               opacity: _showAppBar ? 1 : 0,
-              child: _NavBar(currentRoute: currentRoute),
+              child: SafeArea(
+                bottom: false,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: _NavBar(currentRoute: currentRoute),
+                ),
+              ),
             ),
           ),
 
@@ -113,7 +124,7 @@ class _AppShellState extends State<AppShell> {
                       horizontal: 24,
                       vertical: 32,
                     ),
-                    child: widget.child, // usually an AppPage
+                    child: widget.child, // usually a content-only page
                   ),
                 ),
               ),
@@ -160,7 +171,7 @@ const List<_NavItem> _primaryNavItems = [
 
 //
 // ==========================================================
-// DESKTOP NAV BAR
+// NAV BAR (logo + nav items)
 // ==========================================================
 //
 
@@ -175,59 +186,71 @@ class _NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 1000;
+    final bool isDesktop = MediaQuery.of(context).size.width >= 1000;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => context.go('/'),
-            child: Row(
-              children: [
-                // Logo placeholder
-                Image.asset(
-                  'assets/images/logo.jpg', // <-- your path
-                  height: 50,
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(width: 20),
-                Text(
-                  "GBV Awareness",
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double fullHeight = constraints.maxHeight;
 
-          const Spacer(),
-
-          if (isDesktop)
-            Row(
-              children: [
-                for (final item in _primaryNavItems)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextButton(
-                      onPressed: () => context.go(item.route),
-                      style: TextButton.styleFrom(
-                        foregroundColor: _isSelected(item)
-                            ? Colors.white
-                            : Colors.white.withOpacity(.75),
-                      ),
-                      child: Text(
-                        item.label,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Row(
+            children: [
+              InkWell(
+                onTap: () => context.go('/'),
+                child: Row(
+                  children: [
+                    // =====================================
+                    // LOGO — fills header height vertically
+                    // =====================================
+                    SizedBox(
+                      height: fullHeight,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: Image.asset(
+                          'assets/images/logo.jpg', // your logo
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-        ],
-      ),
+                    const SizedBox(width: 40),
+                    Text(
+                      "GBV Awareness",
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+
+              if (isDesktop)
+                Row(
+                  children: [
+                    for (final item in _primaryNavItems)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: TextButton(
+                          onPressed: () => context.go(item.route),
+                          style: TextButton.styleFrom(
+                            foregroundColor: _isSelected(item)
+                                ? Colors.white
+                                : Colors.white.withOpacity(.75),
+                          ),
+                          child: Text(
+                            item.label,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -301,7 +324,7 @@ class _AppFooter extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 26),
       decoration: BoxDecoration(color: color.primary),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -385,7 +408,7 @@ class _AppFooter extends StatelessWidget {
 
     Widget linkGroup(String title, List<Widget> children) {
       return Padding(
-        padding: const EdgeInsets.only(right: 32, bottom: 16),
+        padding: const EdgeInsets.only(right: 30, bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -453,7 +476,6 @@ class _AppFooter extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-
         Row(
           children: [
             _iconButton(Icons.facebook, "https://placeholder.com"),
