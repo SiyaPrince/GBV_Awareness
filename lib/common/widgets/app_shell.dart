@@ -67,8 +67,13 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final currentRoute = GoRouterState.of(context).uri.toString();
 
+    // 👉 Decide when we treat it as "desktop"
+    final width = MediaQuery.of(context).size.width;
+    final bool isDesktop = width >= 1000; // adjust 1000 to taste
+
     return Scaffold(
-      drawer: _MobileDrawer(currentRoute: currentRoute),
+      // Drawer only on non-desktop
+      drawer: isDesktop ? null : _MobileDrawer(currentRoute: currentRoute),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -170,10 +175,10 @@ class _NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 900;
+    final isDesktop = MediaQuery.of(context).size.width >= 1000;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
         children: [
           InkWell(
@@ -181,21 +186,18 @@ class _NavBar extends StatelessWidget {
             child: Row(
               children: [
                 // Logo placeholder
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                Image.asset(
+                  'assets/images/logo.jpg', // <-- your path
+                  height: 50,
+                  fit: BoxFit.contain,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 20),
                 Text(
                   "GBV Awareness",
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -208,7 +210,7 @@ class _NavBar extends StatelessWidget {
               children: [
                 for (final item in _primaryNavItems)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: TextButton(
                       onPressed: () => context.go(item.route),
                       style: TextButton.styleFrom(
@@ -336,8 +338,8 @@ class _AppFooter extends StatelessWidget {
               Text(
                 "© 2025 GBV Awareness Project — All rights reserved",
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Colors.white.withOpacity(.75),
-                    ),
+                  color: Colors.white.withOpacity(.75),
+                ),
               ),
             ],
           );
@@ -357,10 +359,9 @@ class _AppFooter extends StatelessWidget {
         "Address: 123 Placeholder Road\n"
         "Email: contact@example.com\n"
         "Phone: +1 234 567 890",
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Colors.white,
-              height: 1.4,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium!.copyWith(color: Colors.white, height: 1.4),
       ),
     );
   }
@@ -375,9 +376,9 @@ class _AppFooter extends StatelessWidget {
         Text(
           "Quick Links",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 12),
 
@@ -418,9 +419,9 @@ class _AppFooter extends StatelessWidget {
         Text(
           "Follow Us",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 12),
 
