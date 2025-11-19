@@ -67,8 +67,13 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final currentRoute = GoRouterState.of(context).uri.toString();
 
+    // 👉 Decide when we treat it as "desktop"
+    final width = MediaQuery.of(context).size.width;
+    final bool isDesktop = width >= 1000; // adjust 1000 to taste
+
     return Scaffold(
-      drawer: _MobileDrawer(currentRoute: currentRoute),
+      // Drawer only on non-desktop
+      drawer: isDesktop ? null : _MobileDrawer(currentRoute: currentRoute),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -170,10 +175,10 @@ class _NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = MediaQuery.of(context).size.width >= 900;
+    final isDesktop = MediaQuery.of(context).size.width >= 1000;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
         children: [
           InkWell(
@@ -181,15 +186,12 @@ class _NavBar extends StatelessWidget {
             child: Row(
               children: [
                 // Logo placeholder
-                Container(
-                  width: 42,
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.15),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                Image.asset(
+                  'assets/images/logo.jpg', // <-- your path
+                  height: 50,
+                  fit: BoxFit.contain,
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 20),
                 Text(
                   "GBV Awareness",
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -208,7 +210,7 @@ class _NavBar extends StatelessWidget {
               children: [
                 for (final item in _primaryNavItems)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: TextButton(
                       onPressed: () => context.go(item.route),
                       style: TextButton.styleFrom(
