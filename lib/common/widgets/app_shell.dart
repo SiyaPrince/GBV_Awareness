@@ -193,7 +193,7 @@ class _NavBar extends StatelessWidget {
         final double fullHeight = constraints.maxHeight;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 60),
           child: Row(
             children: [
               InkWell(
