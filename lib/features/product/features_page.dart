@@ -4,6 +4,8 @@ import 'package:gbv_awareness/common/widgets/app_page.dart';
 import 'package:gbv_awareness/common/widgets/feature_card.dart';
 import 'package:gbv_awareness/common/widgets/page_section.dart';
 import 'package:gbv_awareness/common/widgets/persona_card.dart';
+import 'package:gbv_awareness/common/widgets/primary_button.dart';
+import 'package:go_router/go_router.dart';
 
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
@@ -18,6 +20,7 @@ class FeaturesPage extends StatelessWidget {
         _buildFeatureGridSection(context),
         _buildPersonaSection(),
         _buildSafetySection(),
+        _buildFinalCTASection(context),
       ],
     );
   }
@@ -159,6 +162,16 @@ class FeaturesPage extends StatelessWidget {
           "supportive language, and fast exit options to keep users safe.",
           style: TextStyle(fontSize: 15, height: 1.5),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFinalCTASection(BuildContext context) {
+    return PageSection(
+      title: "See real stories from people who used the platform",
+      child: PrimaryButton(
+        label: "View Testimonials",
+        onPressed: () => context.go('/product/testimonials'),
       ),
     );
   }

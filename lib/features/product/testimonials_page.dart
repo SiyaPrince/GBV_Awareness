@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gbv_awareness/common/widgets/app_page.dart';
 import 'package:gbv_awareness/common/widgets/page_section.dart';
+import 'package:gbv_awareness/common/widgets/primary_button.dart';
 import 'package:gbv_awareness/common/widgets/testimonials.dart';
+import 'package:go_router/go_router.dart';
 
 /// Simple local model used only on this page.
 /// This avoids depending on any external Testimonial class.
@@ -26,7 +28,11 @@ class TestimonialsPage extends StatelessWidget {
       title: "What People Say",
       subtitle:
           "Anonymous, safe-to-share reflections from those who have used the platform.",
-      children: [_buildTestimonialSection(context), _buildSupportNoteSection()],
+      children: [
+        _buildTestimonialSection(context),
+        _buildSupportNoteSection(),
+        _buildFinalCTASection(context),
+      ],
     );
   }
 
@@ -113,6 +119,16 @@ class TestimonialsPage extends StatelessWidget {
           "and trauma-informed reflections from people who found value in the platform.",
           style: TextStyle(fontSize: 15, height: 1.5),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFinalCTASection(BuildContext context) {
+    return PageSection(
+      title: "See frequently asked questions in the platform",
+      child: PrimaryButton(
+        label: "FAQ",
+        onPressed: () => context.go('/product/faq'),
       ),
     );
   }

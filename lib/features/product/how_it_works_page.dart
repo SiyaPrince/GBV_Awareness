@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gbv_awareness/common/models/how_it_works_step.dart';
 import 'package:gbv_awareness/common/widgets/app_page.dart';
 import 'package:gbv_awareness/common/widgets/page_section.dart';
+import 'package:gbv_awareness/common/widgets/primary_button.dart';
 import 'package:gbv_awareness/common/widgets/step_card.dart';
+import 'package:go_router/go_router.dart';
 
 class HowItWorksPage extends StatelessWidget {
   const HowItWorksPage({super.key});
@@ -123,12 +125,10 @@ class HowItWorksPage extends StatelessWidget {
 
   Widget _buildFinalCTASection(BuildContext context) {
     return PageSection(
-      title: "See real stories from people who used the platform",
-      child: ElevatedButton(
-        onPressed: () {
-          // TODO: navigate to Testimonials page
-        },
-        child: const Text("View Testimonials"),
+      title: "See features we have in the platform",
+      child: PrimaryButton(
+        label: "View Features",
+        onPressed: () => context.go('/product/features'),
       ),
     );
   }
