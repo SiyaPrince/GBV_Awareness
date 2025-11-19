@@ -335,10 +335,12 @@ class _AppFooter extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              Text(
-                "© 2025 GBV Awareness Project — All rights reserved",
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Colors.white.withOpacity(.75),
+              Center(
+                child: Text(
+                  "© 2025 GBV Awareness Project — All rights reserved",
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Colors.white.withOpacity(.75),
+                  ),
                 ),
               ),
             ],
