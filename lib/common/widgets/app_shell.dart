@@ -193,9 +193,9 @@ class _NavBar extends StatelessWidget {
                 Text(
                   "GBV Awareness",
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -336,8 +336,8 @@ class _AppFooter extends StatelessWidget {
               Text(
                 "© 2025 GBV Awareness Project — All rights reserved",
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: Colors.white.withOpacity(.75),
-                    ),
+                  color: Colors.white.withOpacity(.75),
+                ),
               ),
             ],
           );
@@ -357,53 +357,79 @@ class _AppFooter extends StatelessWidget {
         "Address: 123 Placeholder Road\n"
         "Email: contact@example.com\n"
         "Phone: +1 234 567 890",
-        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Colors.white,
-              height: 1.4,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium!.copyWith(color: Colors.white, height: 1.4),
       ),
     );
   }
 
   // ----------------------------
-  // QUICK LINKS
+  // QUICK LINKS (GROUPED)
   // ----------------------------
   Widget _footerQuickLinks(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Quick Links",
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+    Widget linkButton(String label, String route) {
+      return TextButton(
+        onPressed: () => context.go(route),
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          alignment: Alignment.centerLeft,
+        ),
+        child: Text(label, style: const TextStyle(color: Colors.white)),
+      );
+    }
+
+    Widget linkGroup(String title, List<Widget> children) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 32, bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
-        ),
-        const SizedBox(height: 12),
-
-        for (final item in _primaryNavItems)
-          TextButton(
-            onPressed: () => context.go(item.route),
-            child: Text(
-              item.label,
-              style: const TextStyle(color: Colors.white),
             ),
-          ),
+            const SizedBox(height: 8),
+            ...children,
+          ],
+        ),
+      );
+    }
 
-        TextButton(
-          onPressed: () => context.go('/privacy'),
-          child: const Text(
-            "Privacy Policy",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        TextButton(
-          onPressed: () => context.go('/terms'),
-          child: const Text(
-            "Terms of Service",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+    return Wrap(
+      alignment: WrapAlignment.start,
+      runSpacing: 16,
+      children: [
+        // EXPLORE
+        linkGroup("Explore", [
+          linkButton("Home", "/"),
+          linkButton("About", "/about"),
+          linkButton("Info", "/info"),
+        ]),
+
+        // PRODUCT
+        linkGroup("Product", [
+          linkButton("Overview", "/product"),
+          linkButton("Features", "/product/features"),
+          linkButton("How It Works", "/product/how-it-works"),
+          linkButton("Testimonials", "/product/testimonials"),
+        ]),
+
+        // SUPPORT
+        linkGroup("Support", [
+          linkButton("Support", "/support"),
+          linkButton("Contact", "/contact"),
+          linkButton("FAQ", "/product/faq"),
+        ]),
+
+        // LEGAL
+        linkGroup("Legal", [
+          linkButton("Privacy Policy", "/privacy"),
+          linkButton("Terms of Service", "/terms"),
+        ]),
       ],
     );
   }
@@ -418,9 +444,9 @@ class _AppFooter extends StatelessWidget {
         Text(
           "Follow Us",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const SizedBox(height: 12),
 
