@@ -118,7 +118,7 @@ class _AppShellState extends State<AppShell> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1100),
+                  constraints: const BoxConstraints(maxWidth: 1200),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -186,7 +186,7 @@ class _NavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDesktop = MediaQuery.of(context).size.width >= 1000;
+    final bool isDesktop = MediaQuery.of(context).size.width >= 1100;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -328,7 +328,7 @@ class _AppFooter extends StatelessWidget {
       decoration: BoxDecoration(color: color.primary),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final isWide = constraints.maxWidth > 700;
+          final isWide = constraints.maxWidth > 1100;
 
           return Column(
             crossAxisAlignment: isWide
