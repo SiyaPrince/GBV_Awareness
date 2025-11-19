@@ -12,7 +12,7 @@ class ImportantNotice extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colors.secondary.withOpacity(0.1),
+        color: colors.secondary.withAlpha((0.1 * 255).round()),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: colors.secondary),
       ),

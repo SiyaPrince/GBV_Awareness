@@ -23,7 +23,7 @@ class PrivacyPolicyPage extends StatelessWidget {
           Text(
             'Last Updated: January 2024',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.6),
+              color: colorScheme.onSurface.withAlpha((0.6 * 255).round()),
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -95,7 +95,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: colorScheme.secondary.withOpacity(0.1),
+              color: colorScheme.secondary.withAlpha((0.1 * 255).round()),
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: Text(
