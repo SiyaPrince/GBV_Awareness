@@ -87,10 +87,10 @@ final appRouter = GoRouter(
               ArticleDetailPage(id: state.pathParameters['id']!),
         ),
 
-        GoRoute(
-          path: '/info/dashboard',
-          builder: (context, state) => const DashboardPage(),
-        ),
+        // GoRoute(
+        //   path: '/info/dashboard',
+        //   builder: (context, state) => const DashboardPage(),
+        // ),
 
         // -------------------------
         // PRODUCT SECTION
@@ -136,6 +136,14 @@ final appRouter = GoRouter(
           builder: (context, state) => const PrivacyPolicyPage(),
         ),
         GoRoute(path: '/terms', builder: (context, state) => const TermsPage()),
+
+        // -------------------------
+        // Dashboard
+        // -------------------------
+        GoRoute(
+          path: '/dashboard',
+          builder: (context, state) => const DashboardPage(),
+        ),
       ],
     ),
   ],

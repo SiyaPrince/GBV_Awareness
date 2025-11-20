@@ -168,10 +168,10 @@ class FeaturesPage extends StatelessWidget {
 
   Widget _buildFinalCTASection(BuildContext context) {
     return PageSection(
-      title: "See real stories from people who used the platform",
+      title: "Explore GBV Insights",
       child: PrimaryButton(
-        label: "View Testimonials",
-        onPressed: () => context.go('/product/testimonials'),
+        label: "View Live Dashboard",
+        onPressed: () => context.go('/dashboard'),
       ),
     );
   }
