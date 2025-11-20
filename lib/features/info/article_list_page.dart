@@ -50,61 +50,83 @@ class _ArticleListPageState extends ConsumerState<ArticleListPage> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Educational Articles'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-      body: Column(
+    return SingleChildScrollView(
+      child: Column(
         children: [
+          // Custom App Bar
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            color: Theme.of(context).colorScheme.primary,
+            child: SafeArea(
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Educational Articles',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           ArticleSearchFilterSection(
             searchController: _searchController,
             searchQuery: searchQuery,
             selectedTag: selectedTag,
           ),
-          Expanded(
-            child: articlesAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => ArticleListErrorWidget(
-                message: 'Error loading articles',
-                onRetry: () => setState(() {}),
-              ),
-              data: (articles) {
-                // Apply filters locally
-                List<Article> filtered = articles;
 
-                if (selectedTag != null) {
-                  filtered = filtered
-                      .where((a) => a.tags.contains(selectedTag))
-                      .toList();
-                }
-
-                if (searchQuery.isNotEmpty) {
-                  final q = searchQuery.toLowerCase();
-                  filtered = filtered
-                      .where(
-                        (a) =>
-                            a.title.toLowerCase().contains(q) ||
-                            a.summary.toLowerCase().contains(q) ||
-                            a.tags.any((tag) => tag.toLowerCase().contains(q)),
-                      )
-                      .toList();
-                }
-
-                if (filtered.isEmpty) {
-                  return ArticleListEmptyWidget(message: 'No articles found');
-                }
-
-                return ListView.builder(
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) {
-                    final article = filtered[index];
-                    return ArticleCard(article: article);
-                  },
-                );
-              },
+          // Articles content
+          articlesAsync.when(
+            loading: () => Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: const Center(child: CircularProgressIndicator()),
             ),
+            error: (error, stack) => ArticleListErrorWidget(
+              message: 'Error loading articles',
+              onRetry: () => setState(() {}),
+            ),
+            data: (articles) {
+              // Apply filters locally
+              List<Article> filtered = articles;
+
+              if (selectedTag != null) {
+                filtered = filtered
+                    .where((a) => a.tags.contains(selectedTag))
+                    .toList();
+              }
+
+              if (searchQuery.isNotEmpty) {
+                final q = searchQuery.toLowerCase();
+                filtered = filtered
+                    .where(
+                      (a) =>
+                          a.title.toLowerCase().contains(q) ||
+                          a.summary.toLowerCase().contains(q) ||
+                          a.tags.any((tag) => tag.toLowerCase().contains(q)),
+                    )
+                    .toList();
+              }
+
+              if (filtered.isEmpty) {
+                return ArticleListEmptyWidget(message: 'No articles found');
+              }
+
+              return Column(
+                children: [
+                  ...filtered.map((article) => ArticleCard(article: article)),
+                  const SizedBox(height: 16), // Bottom padding
+                ],
+              );
+            },
           ),
         ],
       ),
