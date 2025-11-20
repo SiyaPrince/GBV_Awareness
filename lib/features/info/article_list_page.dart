@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:go_router/go_router.dart';
+import 'package:gbv_awareness/common/widgets/article_card.dart';
+import 'package:gbv_awareness/common/widgets/article_list_empty_widget.dart';
+import 'package:gbv_awareness/common/widgets/article_list_error_widget.dart';
+import 'package:gbv_awareness/common/widgets/article_search_filter_section.dart';
 import '../../../common/services/content_service.dart';
 import '../../../common/models/article.dart';
 
@@ -55,16 +58,18 @@ class _ArticleListPageState extends ConsumerState<ArticleListPage> {
       ),
       body: Column(
         children: [
-          _buildSearchFilterSection(
-            context,
+          ArticleSearchFilterSection(
+            searchController: _searchController,
             searchQuery: searchQuery,
             selectedTag: selectedTag,
           ),
           Expanded(
             child: articlesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) =>
-                  _buildErrorWidget(context, 'Error loading articles'),
+              error: (error, stack) => ArticleListErrorWidget(
+                message: 'Error loading articles',
+                onRetry: () => setState(() {}),
+              ),
               data: (articles) {
                 // Apply filters locally
                 List<Article> filtered = articles;
@@ -88,219 +93,18 @@ class _ArticleListPageState extends ConsumerState<ArticleListPage> {
                 }
 
                 if (filtered.isEmpty) {
-                  return _buildEmptyWidget(context, 'No articles found');
+                  return ArticleListEmptyWidget(message: 'No articles found');
                 }
 
                 return ListView.builder(
                   itemCount: filtered.length,
                   itemBuilder: (context, index) {
                     final article = filtered[index];
-                    return _buildArticleCard(context, article);
+                    return ArticleCard(article: article);
                   },
                 );
               },
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchFilterSection(
-    BuildContext context, {
-    required String searchQuery,
-    required String? selectedTag,
-  }) {
-    final tagsAsync = ref.watch(tagsStreamProvider);
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          // Search Bar
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search articles...',
-              prefixIcon: Icon(
-                Icons.search,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              suffixIcon: searchQuery.isNotEmpty
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      onPressed: () {
-                        _searchController.clear();
-                        ref.read(articleSearchQueryProvider.notifier).state =
-                            '';
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-            ),
-            onChanged: (value) =>
-                ref.read(articleSearchQueryProvider.notifier).state = value,
-          ),
-          const SizedBox(height: 16),
-
-          // Tags Filter
-          tagsAsync.when(
-            loading: () => const SizedBox(),
-            error: (_, _) => const SizedBox(),
-            data: (tags) {
-              return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    FilterChip(
-                      label: const Text('All'),
-                      selected: selectedTag == null,
-                      onSelected: (_) =>
-                          ref.read(articleSelectedTagProvider.notifier).state =
-                              null,
-                    ),
-                    ...tags.map(
-                      (tag) => Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: FilterChip(
-                          label: Text(tag),
-                          selected: selectedTag == tag,
-                          onSelected: (_) =>
-                              ref
-                                      .read(articleSelectedTagProvider.notifier)
-                                      .state =
-                                  tag,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildArticleCard(BuildContext context, Article article) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (article.featured)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  'FEATURED',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 12),
-            Text(
-              article.title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              article.summary,
-              style: Theme.of(context).textTheme.bodyMedium,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              children: article.tags
-                  .take(3)
-                  .map(
-                    (tag) => Chip(
-                      label: Text(tag, style: const TextStyle(fontSize: 12)),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  '${article.publishedAt.day}/${article.publishedAt.month}/${article.publishedAt.year}',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () => context.go('/info/articles/${article.id}'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  child: const Text('Read More'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorWidget(BuildContext context, String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(message, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: () {
-              setState(() {}); // just forces rebuild
-            },
-            child: const Text('Try Again'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyWidget(BuildContext context, String message) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.school, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(message, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text(
-            'Try adjusting your search or filters',
-            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
