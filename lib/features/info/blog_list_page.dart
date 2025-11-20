@@ -423,7 +423,7 @@ class _BlogListPageState extends ConsumerState<BlogListPage> {
           // Tags Filter
           tagsAsync.when(
             loading: () => const SizedBox(),
-            error: (_, __) => const SizedBox(),
+            error: (_, _) => const SizedBox(),
             data: (tags) {
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

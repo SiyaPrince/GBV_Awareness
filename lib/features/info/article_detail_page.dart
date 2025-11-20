@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../../common/services/content_service.dart';
 import '../../../common/models/article.dart';
 
@@ -22,45 +24,62 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
   }
 
   Future<Article?> _loadArticle() async {
-    final contentService = ref.read(contentServiceProvider);
-    return await contentService.getArticleById(widget.id);
+    final service = ref.read(contentServiceProvider);
+    return await service.getArticleById(widget.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Article Details'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-      body: FutureBuilder<Article?>(
-        future: _articleFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return FutureBuilder<Article?>(
+      future: _articleFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError || snapshot.data == null) {
-            return _buildErrorWidget(context);
-          }
+        if (snapshot.hasError || snapshot.data == null) {
+          return _buildErrorWidget(context);
+        }
 
-          final article = snapshot.data!;
-          return _buildArticleContent(context, article);
-        },
-      ),
+        final article = snapshot.data!;
+        return _buildArticleContent(context, article);
+      },
     );
   }
+
+  // ─────────────────────────────────────────────
+  // MAIN CONTENT WITH SCROLL + BACK ARROW
+  // ─────────────────────────────────────────────
 
   Widget _buildArticleContent(BuildContext context, Article article) {
     final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // BACK BUTTON - FIXED ROUTE
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back, color: colors.primary, size: 26),
+                onPressed: () =>
+                    context.go('/info'), // FIXED: Changed to '/info'
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Back",
+                style: textTheme.titleMedium?.copyWith(
+                  color: colors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
           if (article.featured) _buildFeaturedBadge(context),
           const SizedBox(height: 16),
 
@@ -71,8 +90,8 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
 
+          const SizedBox(height: 16),
           _buildMetaInfo(context, article),
           const SizedBox(height: 24),
 
@@ -97,6 +116,10 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
     );
   }
 
+  // ─────────────────────────────────────────────
+  // UI COMPONENTS
+  // ─────────────────────────────────────────────
+
   Widget _buildFeaturedBadge(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -117,17 +140,17 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
   Widget _buildMetaInfo(BuildContext context, Article article) {
     return Row(
       children: [
-        Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+        const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
         const SizedBox(width: 4),
         Text(
-          '${article.publishedAt.day}/${article.publishedAt.month}/${article.publishedAt.year}',
+          "${article.publishedAt.day}/${article.publishedAt.month}/${article.publishedAt.year}",
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const Spacer(),
-        Icon(Icons.person, size: 16, color: Colors.grey),
+        const Icon(Icons.person, size: 16, color: Colors.grey),
         const SizedBox(width: 4),
         Text(
-          article.author ?? 'Anonymous',
+          article.author ?? "Anonymous",
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
@@ -141,10 +164,10 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
       width: double.infinity,
       height: 200,
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(Icons.photo_library, size: 64, color: colors.primary),
+      child: Icon(Icons.photo_library, color: colors.primary, size: 60),
     );
   }
 
@@ -155,7 +178,7 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Tags:',
+          "Tags:",
           style: Theme.of(
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -163,12 +186,14 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: article.tags.map((tag) {
-            return Chip(
-              label: Text(tag),
-              backgroundColor: colors.secondaryContainer,
-            );
-          }).toList(),
+          children: article.tags
+              .map(
+                (tag) => Chip(
+                  label: Text(tag),
+                  backgroundColor: colors.secondaryContainer,
+                ),
+              )
+              .toList(),
         ),
       ],
     );
@@ -179,17 +204,17 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colors.secondaryContainer,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         children: [
           Icon(Icons.support, size: 40, color: colors.secondary),
           const SizedBox(height: 8),
           Text(
-            'Need Support?',
+            "Need Support?",
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: colors.secondary,
               fontWeight: FontWeight.bold,
@@ -197,8 +222,8 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'If this content has brought up difficult feelings, remember that support is available. '
-            'You can reach out to our support resources for help.',
+            "If this content has brought up difficult feelings, support is available. "
+            "You can reach out to our resources for help.",
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
@@ -207,6 +232,9 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
     );
   }
 
+  // ─────────────────────────────────────────────
+  // ERROR UI
+  // ─────────────────────────────────────────────
   Widget _buildErrorWidget(BuildContext context) {
     return Center(
       child: Column(
@@ -218,14 +246,12 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
             color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(height: 16),
-          Text(
-            'Article not found',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text("Article not found"),
           const SizedBox(height: 8),
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Go Back'),
+            onPressed: () =>
+                context.go('/info'), // FIXED: Also update error widget
+            child: const Text("Go Back"),
           ),
         ],
       ),
