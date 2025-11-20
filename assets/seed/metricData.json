@@ -1,0 +1,82 @@
+[
+  {
+    "metricId": "reports_monthly",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 240,
+    "region": "Central",
+    "breakdown": { "adults": 180, "youth": 60 },
+    "notes": "Higher visibility campaign this month."
+  },
+  {
+    "metricId": "hotline_calls_daily",
+    "timestamp": "2025-02-05T12:00:00Z",
+    "value": 95,
+    "region": "North",
+    "breakdown": { "first_time": 60, "repeat": 35 },
+    "notes": "Increase during awareness week."
+  },
+  {
+    "metricId": "resolutions_weekly",
+    "timestamp": "2025-02-03T12:00:00Z",
+    "value": 42,
+    "region": "South",
+    "breakdown": { "guided": 30, "referred": 12 },
+    "notes": "Improved coordination with local partners."
+  },
+  {
+    "metricId": "shelter_capacity",
+    "timestamp": "2025-02-02T12:00:00Z",
+    "value": 78,
+    "region": "Central",
+    "breakdown": { "women": 45, "children": 33 },
+    "notes": "Temporary surge in accommodation requests."
+  },
+  {
+    "metricId": "online_chats_volume",
+    "timestamp": "2025-02-04T12:00:00Z",
+    "value": 62,
+    "region": "Online",
+    "breakdown": { "mobile": 40, "desktop": 22 },
+    "notes": "Increased evening traffic."
+  },
+  {
+    "metricId": "legal_inquiries_monthly",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 120,
+    "region": "National",
+    "breakdown": { "info": 95, "referral": 25 },
+    "notes": "More inquiries following outreach sessions."
+  },
+  {
+    "metricId": "community_workshops_attendance",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 180,
+    "region": "East",
+    "breakdown": { "in_person": 140, "online": 40 },
+    "notes": "Workshops fully booked."
+  },
+  {
+    "metricId": "support_followups_completed",
+    "timestamp": "2025-02-03T12:00:00Z",
+    "value": 58,
+    "region": "West",
+    "breakdown": { "phone": 30, "in_person": 28 },
+    "notes": "Steady follow-up activity."
+  },
+  {
+    "metricId": "website_resource_clicks",
+    "timestamp": "2025-02-05T12:00:00Z",
+    "value": 305,
+    "region": "Online",
+    "breakdown": { "articles": 180, "resources": 125 },
+    "notes": "New content published."
+  },
+  {
+    "metricId": "regional_support_requests",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 265,
+    "region": "Central",
+    "breakdown": { "walk_in": 95, "online": 170 },
+    "notes": "Increase in online submissions."
+  }
+]

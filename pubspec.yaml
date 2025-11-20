@@ -77,6 +77,8 @@ flutter:
     - assets/seed/support_resources.json
     - assets/seed/messages.json
     - assets/seed/product.json
+    - assets/seed/metrics.json
+    - assets/seed/metricData.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
