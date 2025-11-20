@@ -8,6 +8,8 @@
 // Or with Dart (if configured):
 // dart run tools/seed/seed_messages.dart
 
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';

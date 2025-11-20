@@ -7,6 +7,8 @@
 // or (desktop):
 // flutter run -t tools/seed/seed_articles.dart -d windows
 
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io' show File; // Only used on non-web platforms
 

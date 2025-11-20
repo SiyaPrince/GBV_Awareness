@@ -11,6 +11,8 @@
 // Or via Dart (if configured):
 // dart run tools/seed/seed_stats.dart
 
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io' show File;
 
