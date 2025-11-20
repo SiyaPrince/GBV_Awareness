@@ -29,16 +29,16 @@ Future<void> main() async {
   final firestore = FirebaseFirestore.instance;
 
   const articlesPath = 'assets/seed/articles.json';
-  const blogPostsPath = 'assets/seed/blogPosts.json';
+  // const blogPostsPath = 'assets/seed/blogPosts.json';
 
   final articles = await _loadItemsFromPath(articlesPath);
-  final blogPosts = await _loadItemsFromPath(blogPostsPath);
+  // final blogPosts = await _loadItemsFromPath(blogPostsPath);
 
   print('Seeding "articles" collection...');
   await _seedCollection(firestore, 'articles', articles);
 
-  print('Seeding "blogPosts" collection...');
-  await _seedCollection(firestore, 'blogPosts', blogPosts);
+  // print('Seeding "blogPosts" collection...');
+  // await _seedCollection(firestore, 'blogPosts', blogPosts);
 
   print('✅ Seeding completed.');
 }
