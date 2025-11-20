@@ -62,7 +62,7 @@ class _BlogDetailPageState extends ConsumerState<BlogDetailPage> {
             future: _blogFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
+                return SizedBox(
                   height: MediaQuery.of(context).size.height * 0.6,
                   child: const Center(child: CircularProgressIndicator()),
                 );

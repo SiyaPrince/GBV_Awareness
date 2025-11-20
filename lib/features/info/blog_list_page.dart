@@ -120,7 +120,7 @@ class _BlogListPageState extends ConsumerState<BlogListPage> {
 
               return Column(
                 children: [
-                  ...filtered.map((blog) => BlogCard(blog: blog)).toList(),
+                  ...filtered.map((blog) => BlogCard(blog: blog)),
                   const SizedBox(height: 16), // Bottom padding
                 ],
               );

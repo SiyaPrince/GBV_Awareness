@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gbv_awareness/common/widgets/article-detail_featured_badge.dart';
 import 'package:go_router/go_router.dart';
 import '../../../common/models/article.dart';
+import 'article_detail_featured_badge.dart';
 import 'article_detail_meta_info.dart';
 import 'article_detail_image_placeholder.dart';
 import 'article_detail_tags_section.dart';
@@ -41,7 +41,7 @@ class ArticleDetailContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          if (article.featured) ArticleDetailFeaturedBadge(),
+          if (article.featured) const ArticleDetailFeaturedBadge(),
           const SizedBox(height: 16),
 
           Text(
@@ -56,7 +56,7 @@ class ArticleDetailContent extends StatelessWidget {
           ArticleDetailMetaInfo(article: article),
           const SizedBox(height: 24),
 
-          if (article.imageUrl != null) ArticleDetailImagePlaceholder(),
+          if (article.imageUrl != null) const ArticleDetailImagePlaceholder(),
           const SizedBox(height: 16),
 
           Text(
@@ -72,7 +72,7 @@ class ArticleDetailContent extends StatelessWidget {
             ArticleDetailTagsSection(article: article),
           const SizedBox(height: 32),
 
-          ArticleDetailSupportNotice(),
+          const ArticleDetailSupportNotice(),
         ],
       ),
     );
