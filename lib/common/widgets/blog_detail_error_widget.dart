@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ArticleDetailErrorWidget extends StatelessWidget {
+class BlogDetailErrorWidget extends StatelessWidget {
   final VoidCallback onBack;
 
-  const ArticleDetailErrorWidget({super.key, required this.onBack});
+  const BlogDetailErrorWidget({super.key, required this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +17,12 @@ class ArticleDetailErrorWidget extends StatelessWidget {
             color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(height: 16),
-          const Text("Article not found"),
+          Text(
+            'Blog post not found',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
           const SizedBox(height: 8),
-          TextButton(onPressed: onBack, child: const Text("Go Back")),
+          TextButton(onPressed: onBack, child: const Text('Go Back')),
         ],
       ),
     );

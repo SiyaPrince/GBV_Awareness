@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gbv_awareness/common/widgets/blog_detail_content.dart';
+import 'package:gbv_awareness/common/widgets/blog_detail_error_widget.dart';
 import '../../../common/services/content_service.dart';
 import '../../../common/models/article.dart';
 
@@ -27,205 +29,54 @@ class _BlogDetailPageState extends ConsumerState<BlogDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Blog Post'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-      ),
-      body: FutureBuilder<Article?>(
-        future: _blogFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError || snapshot.data == null) {
-            return _buildErrorWidget(context);
-          }
-
-          final blog = snapshot.data!;
-          return _buildBlogContent(context, blog);
-        },
-      ),
-    );
-  }
-
-  Widget _buildBlogContent(BuildContext context, Article blog) {
-    final colors = Theme.of(context).colorScheme;
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (blog.featured) _buildFeaturedBadge(context),
-          const SizedBox(height: 16),
-
-          Text(
-            blog.title,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: colors.primary,
-              fontWeight: FontWeight.bold,
+          // Custom App Bar
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            color: Theme.of(context).colorScheme.primary,
+            child: SafeArea(
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Blog Post',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 16),
 
-          _buildMetaInfo(context, blog),
-          const SizedBox(height: 24),
+          // Content Area
+          FutureBuilder<Article?>(
+            future: _blogFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              }
 
-          if (blog.imageUrl != null) _buildImagePlaceholder(context),
-          const SizedBox(height: 16),
+              if (snapshot.hasError || snapshot.data == null) {
+                return BlogDetailErrorWidget(
+                  onBack: () => Navigator.pop(context),
+                );
+              }
 
-          Text(
-            blog.summary,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontStyle: FontStyle.italic),
-          ),
-          const SizedBox(height: 24),
-
-          Text(blog.body, style: Theme.of(context).textTheme.bodyLarge),
-          const SizedBox(height: 24),
-
-          if (blog.tags.isNotEmpty) _buildTagsSection(context, blog),
-          const SizedBox(height: 32),
-
-          _buildSupportNotice(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeaturedBadge(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.orange,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        'FEATURED',
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMetaInfo(BuildContext context, Article blog) {
-    return Row(
-      children: [
-        Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-        const SizedBox(width: 4),
-        Text(
-          '${blog.publishedAt.day}/${blog.publishedAt.month}/${blog.publishedAt.year}',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        const Spacer(),
-        Icon(Icons.person, size: 16, color: Colors.grey),
-        const SizedBox(width: 4),
-        Text(
-          blog.author ?? 'Anonymous',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildImagePlaceholder(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Icon(Icons.photo_library, size: 64, color: colors.primary),
-    );
-  }
-
-  Widget _buildTagsSection(BuildContext context, Article blog) {
-    final colors = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Tags:',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: blog.tags.map((tag) {
-            return Chip(
-              label: Text(tag),
-              backgroundColor: colors.secondaryContainer,
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSupportNotice(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: colors.secondaryContainer,
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.support, size: 40, color: colors.secondary),
-          const SizedBox(height: 8),
-          Text(
-            'Need Support?',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: colors.secondary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'If this content has brought up difficult feelings, remember that support is available. '
-            'You can reach out to our support resources for help.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorWidget(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Blog post not found',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Go Back'),
+              final blog = snapshot.data!;
+              return BlogDetailContent(blog: blog);
+            },
           ),
         ],
       ),

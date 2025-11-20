@@ -1,24 +1,23 @@
+// lib/features/blog/presentation/widgets/blog_card.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../common/models/article.dart';
 
-class ArticleCardWidget extends StatelessWidget {
-  final Article article;
-  const ArticleCardWidget({super.key, required this.article});
+class BlogCard extends StatelessWidget {
+  final Article blog;
+
+  const BlogCard({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (article.featured)
+            if (blog.featured)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -27,7 +26,7 @@ class ArticleCardWidget extends StatelessWidget {
                 ),
                 child: Text(
                   'FEATURED',
-                  style: textTheme.labelSmall?.copyWith(
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
@@ -35,23 +34,23 @@ class ArticleCardWidget extends StatelessWidget {
               ),
             const SizedBox(height: 12),
             Text(
-              article.title,
-              style: textTheme.titleLarge?.copyWith(
-                color: colors.primary,
+              blog.title,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              article.summary,
-              style: textTheme.bodyMedium,
+              blog.summary,
+              style: Theme.of(context).textTheme.bodyMedium,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
-              children: article.tags
+              children: blog.tags
                   .take(3)
                   .map(
                     (tag) => Chip(
@@ -64,18 +63,18 @@ class ArticleCardWidget extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
-                  '${article.publishedAt.day}/${article.publishedAt.month}/${article.publishedAt.year}',
-                  style: textTheme.bodySmall,
+                  '${blog.publishedAt.day}/${blog.publishedAt.month}/${blog.publishedAt.year}',
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () => context.go('/info/articles/${article.id}'),
+                  onPressed: () => context.go('/info/blog/${blog.id}'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.primary,
-                    foregroundColor: colors.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   child: const Text('Read More'),
                 ),
