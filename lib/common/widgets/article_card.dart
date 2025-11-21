@@ -1,6 +1,6 @@
-// lib/features/articles/presentation/widgets/article_card.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../common/models/article.dart';
 
@@ -33,6 +33,13 @@ class ArticleCard extends StatelessWidget {
                   ),
                 ),
               ),
+
+            // Display actual image if available
+            if (article.imageUrl != null && article.imageUrl!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _buildArticleImage(context, article.imageUrl!),
+            ],
+
             const SizedBox(height: 12),
             Text(
               article.title,
@@ -59,7 +66,7 @@ class ArticleCard extends StatelessWidget {
                       visualDensity: VisualDensity.compact,
                     ),
                   )
-                  .toList(),
+                  .toList(), // Add .toList() here
             ),
             const SizedBox(height: 12),
             Row(
@@ -82,6 +89,34 @@ class ArticleCard extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildArticleImage(BuildContext context, String imageUrl) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        width: double.infinity,
+        height: 150,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          height: 150,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+        errorWidget: (context, url, error) => Container(
+          height: 150,
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(Icons.photo_library, size: 40, color: Colors.grey),
         ),
       ),
     );

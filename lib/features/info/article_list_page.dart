@@ -86,7 +86,7 @@ class _ArticleListPageState extends ConsumerState<ArticleListPage> {
 
           // Articles content
           articlesAsync.when(
-            loading: () => Container(
+            loading: () => SizedBox(
               height: MediaQuery.of(context).size.height * 0.6,
               child: const Center(child: CircularProgressIndicator()),
             ),

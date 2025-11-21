@@ -56,8 +56,11 @@ class ArticleDetailContent extends StatelessWidget {
           ArticleDetailMetaInfo(article: article),
           const SizedBox(height: 24),
 
-          if (article.imageUrl != null) const ArticleDetailImagePlaceholder(),
-          const SizedBox(height: 16),
+          // Display actual image if available
+          if (article.imageUrl != null && article.imageUrl!.isNotEmpty) ...[
+            ArticleDetailImagePlaceholder(imageUrl: article.imageUrl!),
+            const SizedBox(height: 16),
+          ],
 
           Text(
             article.summary,
@@ -65,7 +68,12 @@ class ArticleDetailContent extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          Text(article.body, style: textTheme.bodyLarge),
+          Text(
+            article.body,
+            style: textTheme.bodyLarge?.copyWith(
+              height: 1.6, // Better line spacing for readability
+            ),
+          ),
           const SizedBox(height: 24),
 
           if (article.tags.isNotEmpty)
