@@ -1,24 +1,26 @@
-// tools/seed/seed_testimonials.dart
-//
-// Seed script for inserting testimonial documents into Firestore.
-//
-// Run with:
-// flutter run -t tools/seed/seed_testimonials.dart
-//
-// Or via Dart:
-// dart run tools/seed/seed_testimonials.dart
-
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
+// tools/seed/seed_testimonials.dart
+//
+// Seed script for inserting Testimonial docs into Firestore.
+//
+// Run with:
+// flutter run -t tools/seed/seed_testimonials.dart -d chrome
+// flutter run -t tools/seed/seed_testimonials.dart -d windows
+//
+// Or (if configured):
+// dart run tools/seed/seed_testimonials.dart
 
+import 'dart:convert';
+import 'dart:io' show File;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Replace `your_app_name` with your actual package name
 import 'package:gbv_awareness/firebase_options.dart';
 
 Future<void> main() async {
@@ -31,26 +33,34 @@ Future<void> main() async {
   const testimonialsPath = 'assets/seed/testimonials.json';
 
   print('Loading testimonials from $testimonialsPath ...');
-  final testimonials = await _loadTestimonialsFromAssets(testimonialsPath);
+  final testimonials = await _loadTestimonialsFromPath(testimonialsPath);
 
   print(
-    'Seeding "testimonials" collection with ${testimonials.length} item(s)...',
+    'Seeding "testimonials" collection with ${testimonials.length} items...',
   );
   await _seedTestimonialsCollection(firestore, testimonials);
 
-  print('✅ Testimonials seeding completed.');
+  print('✅ Testimonial seeding completed.');
 }
 
-Future<List<TestimonialSeed>> _loadTestimonialsFromAssets(
-  String assetPath,
-) async {
-  final jsonString = await rootBundle.loadString(assetPath);
+Future<String> _loadJsonString(String path) async {
+  if (kIsWeb) {
+    return await rootBundle.loadString(path);
+  } else {
+    final file = File(path);
+    if (await file.exists()) {
+      return await file.readAsString();
+    }
+    return await rootBundle.loadString(path);
+  }
+}
+
+Future<List<TestimonialSeed>> _loadTestimonialsFromPath(String path) async {
+  final jsonString = await _loadJsonString(path);
   final dynamic decoded = jsonDecode(jsonString);
 
   if (decoded is! List) {
-    throw Exception(
-      'Testimonials seed file must contain a JSON array: $assetPath',
-    );
+    throw Exception('testimonials.json must contain a JSON array: $path');
   }
 
   return decoded
@@ -64,68 +74,67 @@ Future<void> _seedTestimonialsCollection(
   FirebaseFirestore firestore,
   List<TestimonialSeed> items,
 ) async {
-  for (final testimonial in items) {
-    final docRef = firestore.collection('testimonials').doc(testimonial.id);
+  for (final t in items) {
+    final docRef = firestore.collection('testimonials').doc(t.id);
 
-    // Optional: avoid duplicates
     final snapshot = await docRef.get();
     if (snapshot.exists) {
-      print('[testimonials] Skipping existing testimonial: ${testimonial.id}');
+      print('[testimonials] Skipping existing testimonial: ${t.id}');
       continue;
     }
 
-    await docRef.set(testimonial.toMap());
-    print(
-      '[testimonials] Seeded testimonial: ${testimonial.id} (${testimonial.name})',
-    );
+    await docRef.set(t.toMap());
+    print('[testimonials] Seeded testimonial: ${t.id}');
   }
 }
 
 class TestimonialSeed {
   final String id;
+  final String quote;
   final String name;
   final String? role;
-  final String message;
-  final String? imageUrl;
-  final num rating;
-  final DateTime timestamp;
+  final String? organisation;
+  final String? avatarUrl;
+  final int order;
+  final bool isFeatured;
+  final int? rating;
 
   TestimonialSeed({
     required this.id,
+    required this.quote,
     required this.name,
     required this.role,
-    required this.message,
-    required this.imageUrl,
+    required this.organisation,
+    required this.avatarUrl,
+    required this.order,
+    required this.isFeatured,
     required this.rating,
-    required this.timestamp,
   });
 
   factory TestimonialSeed.fromJson(Map<String, dynamic> json) {
-    final timestampRaw = json['timestamp'] as String?;
-    if (timestampRaw == null) {
-      throw Exception('Missing "timestamp" for testimonial id: ${json['id']}');
-    }
-
     return TestimonialSeed(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      role: json['role'] as String?,
-      message: json['message'] as String,
-      imageUrl: json['imageUrl'] as String?,
-      rating: json['rating'] as num,
-      timestamp: DateTime.parse(timestampRaw),
+      id: json['id']?.toString() ?? '',
+      quote: json['quote']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      role: json['role']?.toString(),
+      organisation: json['organisation']?.toString(),
+      avatarUrl: json['avatarUrl']?.toString(),
+      order: (json['order'] as num?)?.toInt() ?? 0,
+      isFeatured: (json['isFeatured'] ?? false) as bool,
+      rating: (json['rating'] as num?)?.toInt(),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'quote': quote,
       'name': name,
       'role': role,
-      'message': message,
-      'imageUrl': imageUrl,
+      'organisation': organisation,
+      'avatarUrl': avatarUrl,
+      'order': order,
+      'isFeatured': isFeatured,
       'rating': rating,
-      'timestamp': Timestamp.fromDate(timestamp),
     };
   }
 }
