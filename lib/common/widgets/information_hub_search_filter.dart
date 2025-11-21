@@ -25,7 +25,7 @@ class InformationHubSearchFilter extends ConsumerWidget {
     return Column(
       children: [
         TextField(
-          key: ValueKey(search),
+          // ❗ FIXED — removed ValueKey(search)
           decoration: InputDecoration(
             hintText: 'Search for information...',
             prefixIcon: Icon(
@@ -52,7 +52,7 @@ class InformationHubSearchFilter extends ConsumerWidget {
 
         tagsAsync.when(
           loading: () => const SizedBox(),
-          error: (_, _) => const SizedBox(),
+          error: (_, __) => const SizedBox(),
           data: (categories) {
             return Row(
               children: [
@@ -70,28 +70,26 @@ class InformationHubSearchFilter extends ConsumerWidget {
                         FilterChip(
                           label: const Text('All'),
                           selected: selectedCategory == null,
-                          onSelected: (_) =>
-                              ref
-                                      .read(selectedCategoryProvider.notifier)
-                                      .state =
-                                  null,
+                          onSelected: (_) {
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                null;
+                          },
                         ),
-                        ...categories.map(
-                          (tag) => Padding(
+                        ...categories.map((tag) {
+                          return Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: FilterChip(
                               label: Text(tag),
                               selected: selectedCategory == tag,
-                              onSelected: (_) =>
-                                  ref
-                                          .read(
-                                            selectedCategoryProvider.notifier,
-                                          )
-                                          .state =
-                                      tag,
+                              onSelected: (_) {
+                                ref
+                                        .read(selectedCategoryProvider.notifier)
+                                        .state =
+                                    tag;
+                              },
                             ),
-                          ),
-                        ),
+                          );
+                        }).toList(),
                       ],
                     ),
                   ),
