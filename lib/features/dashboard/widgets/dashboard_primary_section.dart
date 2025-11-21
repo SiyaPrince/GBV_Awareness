@@ -10,10 +10,7 @@ import 'package:gbv_awareness/features/dashboard/widgets/support_help_card.dart'
 class DashboardPrimarySection extends StatelessWidget {
   final DashboardController controller;
 
-  const DashboardPrimarySection({
-    super.key,
-    required this.controller,
-  });
+  const DashboardPrimarySection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +55,8 @@ class DashboardPrimarySection extends StatelessWidget {
 
             final chartWidgets = chartableMetrics
                 .map(
-                  (metric) => _MetricChartCard(
-                    controller: controller,
-                    metric: metric,
-                  ),
+                  (metric) =>
+                      _MetricChartCard(controller: controller, metric: metric),
                 )
                 .toList();
 
@@ -113,10 +108,7 @@ class _MetricChartCard extends StatelessWidget {
   final DashboardController controller;
   final StatMetric metric;
 
-  const _MetricChartCard({
-    required this.controller,
-    required this.metric,
-  });
+  const _MetricChartCard({required this.controller, required this.metric});
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +123,7 @@ class _MetricChartCard extends StatelessWidget {
             return MetricBarChart(metric: metric, points: points);
           case ChartType.line:
           case ChartType.none:
-          return MetricLineChart(metric: metric, points: points);
+            return MetricLineChart(metric: metric, points: points);
         }
       },
     );
