@@ -52,7 +52,7 @@ class InformationHubSearchFilter extends ConsumerWidget {
 
         tagsAsync.when(
           loading: () => const SizedBox(),
-          error: (_, __) => const SizedBox(),
+          error: (_, _) => const SizedBox(),
           data: (categories) {
             return Row(
               children: [
@@ -89,7 +89,7 @@ class InformationHubSearchFilter extends ConsumerWidget {
                               },
                             ),
                           );
-                        }).toList(),
+                        }),
                       ],
                     ),
                   ),
