@@ -1,21 +1,52 @@
-// lib/features/articles/presentation/widgets/article_detail_image_placeholder.dart
 import 'package:flutter/material.dart';
 
 class ArticleDetailImagePlaceholder extends StatelessWidget {
-  const ArticleDetailImagePlaceholder({super.key});
+  final String imageUrl;
+
+  const ArticleDetailImagePlaceholder({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.network(
+        imageUrl,
+        width: double.infinity,
+        height: 250,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            height: 250,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            height: 250,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.photo_library,
+              size: 60,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          );
+        },
       ),
-      child: Icon(Icons.photo_library, color: colors.primary, size: 60),
     );
   }
 }
