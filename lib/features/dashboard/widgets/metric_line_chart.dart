@@ -1,122 +1,105 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:gbv_awareness/common/services/stats/models/metric_point.dart';
-import 'package:gbv_awareness/common/services/stats/models/stat_metric.dart';
-import '../utils/chart_converters.dart';
+import 'package:gbv_awareness/common/services/stats/stats_service.dart';
+import 'package:gbv_awareness/features/dashboard/widgets/metric_chart_shared.dart';
 
 class MetricLineChart extends StatelessWidget {
-  final StatMetric metric;
-  final List<MetricPoint> points;
+  final List<MetricWithLatest> metrics;
 
   const MetricLineChart({
     super.key,
-    required this.metric,
-    required this.points,
+    required this.metrics,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (points.isEmpty) {
-      return _buildEmptyState(context);
+    final theme = Theme.of(context);
+
+    final spots = <FlSpot>[];
+    final values = <double>[];
+
+    for (var i = 0; i < metrics.length; i++) {
+      final v = metrics[i].latestPoint!.value.toDouble();
+      spots.add(FlSpot(i.toDouble(), v));
+      values.add(v);
     }
 
-    final theme = Theme.of(context);
-    final spots = metricPointsToLineSpots(points);
+    final minY = values.reduce((a, b) => a < b ? a : b);
+    final maxY = values.reduce((a, b) => a > b ? a : b);
 
     return Card(
-      elevation: 1,
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(metric.title, style: theme.textTheme.titleMedium),
-            if (metric.description != null) ...[
-              const SizedBox(height: 4),
-              Text(metric.description!, style: theme.textTheme.bodySmall),
-            ],
+            Text('Line-based metrics', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 4),
+            Text(
+              'Trend-style metrics plotted together. Each colour represents a metric.',
+              style: theme.textTheme.bodySmall,
+            ),
             const SizedBox(height: 16),
             SizedBox(
-              height: 220,
-              child: LineChart(
-                LineChartData(
-                  lineTouchData: LineTouchData(
-                    handleBuiltInTouches: true,
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipItems: (touchedSpots) {
-                        return touchedSpots.map((spot) {
-                          final date = points[spot.spotIndex].timestamp;
-                          final value = points[spot.spotIndex].value;
-                          return LineTooltipItem(
-                            '${date.day}/${date.month}\n$value',
-                            const TextStyle(fontWeight: FontWeight.bold),
-                          );
-                        }).toList();
-                      },
-                    ),
-                  ),
-                  gridData: FlGridData(show: true),
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
+              height: 260,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: LineChart(
+                      LineChartData(
+                        minY: (minY - 1).clamp(0, double.infinity),
+                        maxY: maxY + 1,
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: spots,
+                            isCurved: true,
+                            barWidth: 2,
+                            // ignore: deprecated_member_use
+                            color: theme.colorScheme.primary.withOpacity(0.4),
+                            dotData: FlDotData(
+                              show: true,
+                              getDotPainter:
+                                  (spot, percent, barData, index) =>
+                                      FlDotCirclePainter(
+                                radius: 3,
+                                color: metricColor(index, theme),
+                                strokeWidth: 1,
+                                strokeColor: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                        gridData: FlGridData(show: true),
+                        borderData: FlBorderData(show: true),
+                        titlesData: const FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
                       ),
                     ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 22,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index < 0 || index >= points.length) {
-                            return const SizedBox.shrink();
-                          }
-                          final date = points[index].timestamp;
-                          return Text(
-                            '${date.day}/${date.month}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          );
-                        },
-                      ),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
                   ),
-                  borderData: FlBorderData(show: true),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: spots,
-                      isCurved: true,
-                      dotData: const FlDotData(show: false),
-                    ),
-                  ],
-                ),
+                  const SizedBox(width: 16),
+                  MetricsLegend(metrics: metrics),
+                ],
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        height: 180,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          'No data available yet for this metric.',
-          style: theme.textTheme.bodyMedium,
         ),
       ),
     );
