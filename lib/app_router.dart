@@ -15,6 +15,7 @@
 // =================================
 
 // import 'package:flutter/material.dart';
+import 'package:gbv_awareness/features/dashboard/pages/dashboard_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
@@ -26,7 +27,6 @@ import 'features/info/blog_list_page.dart';
 import 'features/info/blog_detail_page.dart';
 import 'features/info/article_list_page.dart';
 import 'features/info/article_detail_page.dart';
-import 'features/info/dashboard_page.dart';
 
 // PRODUCT SECTION
 import 'features/product/product_overview_page.dart';

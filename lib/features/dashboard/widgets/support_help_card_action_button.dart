@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gbv_awareness/features/support/support_page.dart';
+import 'package:go_router/go_router.dart';
 
 class SupportHelpCardActionButton extends StatelessWidget {
   const SupportHelpCardActionButton({super.key});
@@ -12,11 +12,8 @@ class SupportHelpCardActionButton extends StatelessWidget {
       width: double.infinity,
       child: FilledButton.icon(
         onPressed: () {
-          // Navigate to SupportPage
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SupportPage()),
-          );
+          // Use go_router navigation
+          context.push('/support');
         },
         style: FilledButton.styleFrom(
           backgroundColor: theme.colorScheme.error,
