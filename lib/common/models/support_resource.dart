@@ -74,6 +74,39 @@ class SupportResource {
     }
   }
 
+  // Fixed: Add method to get background color without deprecated methods
+  Color get backgroundColor {
+    switch (type) {
+      case 'hotline':
+        return const Color.fromRGBO(244, 67, 54, 0.1); // Red with 0.1 opacity
+      case 'shelter':
+        return const Color.fromRGBO(
+          255,
+          152,
+          0,
+          0.1,
+        ); // Orange with 0.1 opacity
+      case 'legal':
+        return const Color.fromRGBO(33, 150, 243, 0.1); // Blue with 0.1 opacity
+      case 'health':
+        return const Color.fromRGBO(76, 175, 80, 0.1); // Green with 0.1 opacity
+      case 'organization':
+        return const Color.fromRGBO(
+          156,
+          39,
+          176,
+          0.1,
+        ); // Purple with 0.1 opacity
+      default:
+        return const Color.fromRGBO(
+          158,
+          158,
+          158,
+          0.1,
+        ); // Grey with 0.1 opacity
+    }
+  }
+
   bool get hasContact => contact.isNotEmpty;
   bool get hasWebsite => url.isNotEmpty;
 

@@ -23,9 +23,13 @@ class SupportResourceCard extends StatelessWidget {
     }
   }
 
-  // Helper method to get color with opacity without using deprecated withOpacity
+  // Updated: no more deprecated red, green, blue
   Color _getColorWithOpacity(Color color) {
-    return Color.fromRGBO(color.red, color.green, color.blue, 0.1);
+    final r = (color.r * 255.0).round().clamp(0, 255);
+    final g = (color.g * 255.0).round().clamp(0, 255);
+    final b = (color.b * 255.0).round().clamp(0, 255);
+
+    return Color.fromRGBO(r, g, b, 0.1);
   }
 
   @override
@@ -54,6 +58,7 @@ class SupportResourceCard extends StatelessWidget {
                   child: Icon(resource.icon, color: resource.color, size: 24),
                 ),
                 const SizedBox(width: 16),
+
                 // Content
                 Expanded(
                   child: Column(
@@ -78,6 +83,7 @@ class SupportResourceCard extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 // Emergency badge
                 if (resource.isEmergency)
                   Container(
@@ -103,7 +109,7 @@ class SupportResourceCard extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // Contact information
+            // Contact number
             if (resource.contact.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

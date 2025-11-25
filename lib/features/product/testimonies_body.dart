@@ -7,10 +7,7 @@ import 'package:gbv_awareness/common/widgets/app_page.dart';
 class ProductTestimonialsBody extends StatelessWidget {
   final List<Testimonial> items;
 
-  const ProductTestimonialsBody({
-    super.key,
-    required this.items,
-  });
+  const ProductTestimonialsBody({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +20,7 @@ class ProductTestimonialsBody extends StatelessWidget {
       children: [
         const SizedBox(height: 8),
         Column(
-          children: [
-            for (final t in sorted) _TestimonialCard(testimonial: t),
-          ],
+          children: [for (final t in sorted) _TestimonialCard(testimonial: t)],
         ),
       ],
     );
@@ -44,7 +39,7 @@ class _TestimonialCard extends StatelessWidget {
     final subtitleParts = [
       testimonial.role?.trim(),
       testimonial.organisation?.trim(),
-    ].where((part) => part != null && part!.isNotEmpty).cast<String>().toList();
+    ].where((part) => part != null && part.isNotEmpty).cast<String>().toList();
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -73,7 +68,9 @@ class _TestimonialCard extends StatelessWidget {
               Text(
                 subtitleParts.join(' • '),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
+                  color: theme.textTheme.bodySmall?.color?.withValues(
+                    alpha: 0.8,
+                  ),
                 ),
               ),
 
