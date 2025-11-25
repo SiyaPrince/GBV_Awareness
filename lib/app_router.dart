@@ -15,6 +15,7 @@
 // =================================
 
 // import 'package:flutter/material.dart';
+import 'package:gbv_awareness/features/product/testimonies_body.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
@@ -31,7 +32,6 @@ import 'features/info/dashboard_page.dart';
 // PRODUCT SECTION
 import 'features/product/product_overview_page.dart';
 import 'features/product/features_page.dart';
-import 'features/product/how_it_works_page.dart';
 import 'features/product/testimonials_page.dart';
 import 'features/product/faq_page.dart';
 
@@ -101,19 +101,19 @@ final appRouter = GoRouter(
         ),
         GoRoute(
           path: '/product/features',
-          builder: (context, state) => const FeaturesPage(),
+          builder: (context, state) => const ProductFeaturesPage(),
         ),
-        GoRoute(
-          path: '/product/how-it-works',
-          builder: (context, state) => const HowItWorksPage(),
-        ),
+        // GoRoute(
+        //   path: '/product/how-it-works',
+        //   builder: (context, state) => const HowItWorksPage(),
+        // ),
         GoRoute(
           path: '/product/testimonials',
-          builder: (context, state) => const TestimonialsPage(),
+          builder: (context, state) => const ProductTestimonialsPage(),
         ),
         GoRoute(
           path: '/product/faq',
-          builder: (context, state) => const FAQPage(),
+          builder: (context, state) => const ProductFaqPage(),
         ),
 
         // -------------------------
