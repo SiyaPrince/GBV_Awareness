@@ -1,52 +1,47 @@
 // tools/seed/seed_support_resources.dart
 //
-// Seed script for inserting support resources into Firestore.
-//
+// Seeder for inserting support resources into Firestore.
 // Run with:
 // flutter run -t tools/seed/seed_support_resources.dart
 //
-// Or with Dart (if configured):
-// dart run tools/seed/seed_support_resources.dart
-
 // ignore_for_file: avoid_print
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Replace `your_app_name` with your actual package name
 import 'package:gbv_awareness/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final firestore = FirebaseFirestore.instance;
 
-  const resourcesPath = 'assets/seed/support_resources.json';
+  const seedFilePath = 'assets/seed/support_resources.json';
 
-  print('Loading support resources from $resourcesPath ...');
-  final resources = await _loadSupportResourcesFromAssets(resourcesPath);
+  print('Loading support resources from $seedFilePath ...');
+  final items = await _loadSeedData(seedFilePath);
 
-  print(
-    'Seeding "support_resources" collection with ${resources.length} items...',
-  );
-  await _seedSupportResourcesCollection(firestore, resources);
+  print('Seeding support_resources collection with ${items.length} items...');
+  await _seedSupportResources(firestore, items);
 
   print('✅ Support resources seeding completed.');
 }
 
-Future<List<SupportResourceSeed>> _loadSupportResourcesFromAssets(
-  String assetPath,
-) async {
+//
+// ──────────────────────────────────────────────────────────────────────────
+//   Load JSON Seed Data
+// ──────────────────────────────────────────────────────────────────────────
+//
+
+Future<List<SupportResourceSeed>> _loadSeedData(String assetPath) async {
   final jsonString = await rootBundle.loadString(assetPath);
 
-  final dynamic decoded = jsonDecode(jsonString);
+  final decoded = jsonDecode(jsonString);
   if (decoded is! List) {
     throw Exception('Seed file must contain a JSON array: $assetPath');
   }
@@ -58,86 +53,89 @@ Future<List<SupportResourceSeed>> _loadSupportResourcesFromAssets(
       .toList();
 }
 
-Future<void> _seedSupportResourcesCollection(
+//
+// ──────────────────────────────────────────────────────────────────────────
+//   Insert into Firestore
+// ──────────────────────────────────────────────────────────────────────────
+//
+
+Future<void> _seedSupportResources(
   FirebaseFirestore firestore,
   List<SupportResourceSeed> items,
 ) async {
-  for (final resource in items) {
-    final docRef = firestore.collection('support_resources').doc(resource.id);
+  final collection = firestore.collection('support_resources');
 
-    // Optional: skip duplicates on re-run
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      print('[support_resources] Skipping existing resource: ${resource.id}');
+  for (final item in items) {
+    final docRef = collection.doc(item.id);
+
+    final existing = await docRef.get();
+    if (existing.exists) {
+      print('[support_resources] Skipping existing: ${item.id}');
       continue;
     }
 
-    await docRef.set(resource.toMap());
-    print(
-      '[support_resources] Seeded resource: ${resource.id} (${resource.name})',
-    );
+    await docRef.set(item.toMap());
+    print('[support_resources] Inserted: ${item.id}');
   }
 }
+
+//
+// ──────────────────────────────────────────────────────────────────────────
+//   Seed Model (Matches SupportResource exactly)
+// ──────────────────────────────────────────────────────────────────────────
+//
 
 class SupportResourceSeed {
   final String id;
   final String name;
   final String type;
+  final String contact;
+  final String region;
+  final String hours;
   final String description;
-  final String? phone;
-  final String? email;
-  final String? website;
-  final String? address;
-  final String? availableHours;
-  final num priority;
-  final List<String> tags;
+  final bool isEmergency;
+  final String url;
 
   SupportResourceSeed({
     required this.id,
     required this.name,
     required this.type,
+    required this.contact,
+    required this.region,
+    required this.hours,
     required this.description,
-    required this.phone,
-    required this.email,
-    required this.website,
-    required this.address,
-    required this.availableHours,
-    required this.priority,
-    required this.tags,
+    required this.isEmergency,
+    required this.url,
   });
 
+  /// SAFE JSON PARSER — No more "Null is not a subtype of String"
   factory SupportResourceSeed.fromJson(Map<String, dynamic> json) {
-    final tagsDynamic = json['tags'] as List<dynamic>? ?? <dynamic>[];
-    final tags = tagsDynamic.map((e) => e.toString()).toList();
-
     return SupportResourceSeed(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      type: json['type'] as String,
-      description: json['description'] as String,
-      phone: json['phone'] as String?,
-      email: json['email'] as String?,
-      website: json['website'] as String?,
-      address: json['address'] as String?,
-      availableHours: json['availableHours'] as String?,
-      priority: json['priority'] as num,
-      tags: tags,
+      id: (json['id'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      type: (json['type'] ?? '').toString(),
+      contact: (json['contact'] ?? '').toString(),
+      region: (json['region'] ?? '').toString(),
+      hours: (json['hours'] ?? '').toString(),
+      description: (json['description'] ?? '').toString(),
+      isEmergency: json['isEmergency'] is bool
+          ? json['isEmergency'] as bool
+          : (json['isEmergency']?.toString().toLowerCase() == 'true'),
+      url: (json['url'] ?? '').toString(),
     );
   }
 
+  /// What gets written to Firestore
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'name': name,
       'type': type,
+      'contact': contact,
+      'region': region,
+      'hours': hours,
       'description': description,
-      'phone': phone,
-      'email': email,
-      'website': website,
-      'address': address,
-      'availableHours': availableHours,
-      'priority': priority,
-      'tags': tags,
+      'isEmergency': isEmergency,
+      'url': url,
     };
   }
 }

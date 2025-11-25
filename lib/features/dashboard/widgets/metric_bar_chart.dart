@@ -1,101 +1,97 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:gbv_awareness/common/services/stats/models/metric_point.dart';
-import 'package:gbv_awareness/common/services/stats/models/stat_metric.dart';
-import '../utils/chart_converters.dart';
+import 'package:gbv_awareness/common/services/stats/stats_service.dart';
+import 'package:gbv_awareness/features/dashboard/widgets/metric_chart_shared.dart';
 
 class MetricBarChart extends StatelessWidget {
-  final StatMetric metric;
-  final List<MetricPoint> points;
+  final List<MetricWithLatest> metrics;
 
   const MetricBarChart({
     super.key,
-    required this.metric,
-    required this.points,
+    required this.metrics,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (points.isEmpty) {
-      return _buildEmptyState(context);
+    final theme = Theme.of(context);
+
+    final barGroups = <BarChartGroupData>[];
+    final values = <double>[];
+
+    for (var i = 0; i < metrics.length; i++) {
+      final v = metrics[i].latestPoint!.value.toDouble();
+      values.add(v);
+
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: v,
+              width: 14,
+              borderRadius: BorderRadius.circular(4),
+              color: metricColor(i, theme),
+            ),
+          ],
+        ),
+      );
     }
 
-    final theme = Theme.of(context);
-    final groups = metricPointsToBarGroups(points);
+    final maxY = values.reduce((a, b) => a > b ? a : b);
 
     return Card(
-      elevation: 1,
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Bar-based metrics', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 4),
             Text(
-              metric.title,
-              style: theme.textTheme.titleMedium,
+              'Comparison-style metrics plotted together. Colours match the line chart.',
+              style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
             SizedBox(
-              height: 220,
-              child: BarChart(
-                BarChartData(
-                  barTouchData: BarTouchData(enabled: true),
-                  gridData: FlGridData(show: true),
-                  borderData: FlBorderData(show: false),
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: true, reservedSize: 40),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 22,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index < 0 || index >= points.length) {
-                            return const SizedBox.shrink();
-                          }
-
-                          final label = points[index].region ??
-                              'P${index + 1}'; // generic fallback
-
-                          return Text(
-                            label,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          );
-                        },
+              height: 260,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: BarChart(
+                      BarChartData(
+                        maxY: maxY + 1,
+                        barGroups: barGroups,
+                        gridData: FlGridData(show: true),
+                        borderData: FlBorderData(show: true),
+                        titlesData: const FlTitlesData(
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                            ),
+                          ),
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                        ),
                       ),
                     ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
                   ),
-                  barGroups: groups,
-                ),
+                  const SizedBox(width: 16),
+                  MetricsLegend(metrics: metrics),
+                ],
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Container(
-        height: 180,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          'No comparison data available yet for this metric.',
-          style: theme.textTheme.bodyMedium,
         ),
       ),
     );

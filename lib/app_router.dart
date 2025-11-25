@@ -15,7 +15,11 @@
 // =================================
 
 // import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:gbv_awareness/features/dashboard/pages/dashboard_page.dart';
+=======
+import 'package:gbv_awareness/features/product/testimonies_body.dart';
+>>>>>>> a20a1f96af3ec0949c8884b6d072f75a63bee7c6
 import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
@@ -31,7 +35,6 @@ import 'features/info/article_detail_page.dart';
 // PRODUCT SECTION
 import 'features/product/product_overview_page.dart';
 import 'features/product/features_page.dart';
-import 'features/product/how_it_works_page.dart';
 import 'features/product/testimonials_page.dart';
 import 'features/product/faq_page.dart';
 
@@ -101,19 +104,19 @@ final appRouter = GoRouter(
         ),
         GoRoute(
           path: '/product/features',
-          builder: (context, state) => const FeaturesPage(),
+          builder: (context, state) => const ProductFeaturesPage(),
         ),
-        GoRoute(
-          path: '/product/how-it-works',
-          builder: (context, state) => const HowItWorksPage(),
-        ),
+        // GoRoute(
+        //   path: '/product/how-it-works',
+        //   builder: (context, state) => const HowItWorksPage(),
+        // ),
         GoRoute(
           path: '/product/testimonials',
-          builder: (context, state) => const TestimonialsPage(),
+          builder: (context, state) => const ProductTestimonialsPage(),
         ),
         GoRoute(
           path: '/product/faq',
-          builder: (context, state) => const FAQPage(),
+          builder: (context, state) => const ProductFaqPage(),
         ),
 
         // -------------------------

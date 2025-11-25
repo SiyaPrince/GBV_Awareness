@@ -1,122 +1,114 @@
 import 'package:flutter/material.dart';
-import 'package:gbv_awareness/common/services/stats/models/metric_point.dart';
+import 'package:gbv_awareness/common/services/stats/stats_service.dart';
 import 'package:gbv_awareness/common/services/stats/models/stat_metric.dart';
 import 'package:gbv_awareness/features/dashboard/controllers/dashboard_controller.dart';
-import 'package:gbv_awareness/features/dashboard/widgets/interpretation_card.dart';
 import 'package:gbv_awareness/features/dashboard/widgets/metric_line_chart.dart';
 import 'package:gbv_awareness/features/dashboard/widgets/metric_bar_chart.dart';
-import 'package:gbv_awareness/features/dashboard/widgets/support_help_card.dart';
 
 class DashboardPrimarySection extends StatelessWidget {
   final DashboardController controller;
 
-  const DashboardPrimarySection({
-    super.key,
-    required this.controller,
-  });
+  const DashboardPrimarySection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return StreamBuilder<List<StatMetric>>(
-      stream: controller.metricsStream,
+    return StreamBuilder<List<MetricWithLatest>>(
+      stream: controller.dashboardMetricsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const _PrimarySkeleton();
         }
 
-        final metrics = snapshot.data ?? const [];
-        if (metrics.isEmpty) {
+        if (snapshot.hasError) {
           return Center(
             child: Text(
-              'No metrics found. Ask an admin to configure metrics in Firestore.',
+              'Unable to load dashboard visuals.',
               style: theme.textTheme.bodyMedium,
             ),
           );
         }
 
-        // Only show metrics that have a chart
-        final chartableMetrics = metrics
-            .where((m) => m.chartType != ChartType.none)
-            .toList();
+        final rawItems = snapshot.data ?? const [];
 
-        if (chartableMetrics.isEmpty) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
-              Text('No chartable metrics configured.'),
-              SizedBox(height: 16),
-              SupportHelpCard(),
-            ],
+        // Only metrics that actually have a latest value
+        final withValue = rawItems.where((m) => m.latestPoint != null).toList();
+
+        if (withValue.isEmpty) {
+          return Center(
+            child: Text(
+              'No data available yet for dashboard visuals.',
+              style: theme.textTheme.bodyMedium,
+            ),
           );
         }
 
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth > 800;
+        // Sort by priority (lowest number = highest priority)
+        withValue.sort((a, b) {
+          final pa = a.metric.priority;
+          final pb = b.metric.priority;
+          return pa.compareTo(pb);
+        });
 
+<<<<<<< HEAD
+        // Enum-based filtering (ChartType from StatMetric)
+        bool isLineMetric(MetricWithLatest m) =>
+            m.metric.chartType == ChartType.line;
+        bool isBarMetric(MetricWithLatest m) =>
+            m.metric.chartType == ChartType.bar;
+=======
             final chartWidgets = chartableMetrics
                 .map(
-                  (metric) => _MetricChartCard(
-                    controller: controller,
-                    metric: metric,
-                  ),
+                  (metric) =>
+                      _MetricChartCard(controller: controller, metric: metric),
                 )
                 .toList();
+>>>>>>> c2ebb37 (Dashboard: unified line+bar chart layout, updated primary section)
 
-            Widget charts;
-            if (isWide) {
-              charts = Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: chartWidgets
-                    .map(
-                      (child) => SizedBox(
-                        width: (constraints.maxWidth - 16) / 2,
-                        child: child,
-                      ),
-                    )
-                    .toList(),
-              );
-            } else {
-              charts = Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final child in chartWidgets) ...[
-                    child,
-                    const SizedBox(height: 16),
-                  ],
-                ],
-              );
-            }
+        List<MetricWithLatest> lineMetrics =
+            withValue.where(isLineMetric).toList();
+        List<MetricWithLatest> barMetrics =
+            withValue.where(isBarMetric).toList();
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                charts,
-                const SizedBox(height: 24),
-                // Generic interpretation card (no specific metric passed)
-                const InterpretationCard(),
-                const SizedBox(height: 16),
-                const SupportHelpCard(),
-              ],
-            );
-          },
+        // Fallbacks if chartType not set
+        if (lineMetrics.isEmpty && barMetrics.isEmpty) {
+          lineMetrics = List.from(withValue);
+          barMetrics = List.from(withValue);
+        } else {
+          if (lineMetrics.isEmpty) lineMetrics = List.from(withValue);
+          if (barMetrics.isEmpty) barMetrics = List.from(withValue);
+        }
+
+        // Vertical layout: line chart then bar chart
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MetricLineChart(metrics: lineMetrics),
+            const SizedBox(height: 16),
+            MetricBarChart(metrics: barMetrics),
+          ],
         );
       },
     );
   }
 }
 
+<<<<<<< HEAD
+class _PrimarySkeleton extends StatelessWidget {
+  const _PrimarySkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 260,
+      child: Center(child: CircularProgressIndicator()),
+=======
 class _MetricChartCard extends StatelessWidget {
   final DashboardController controller;
   final StatMetric metric;
 
-  const _MetricChartCard({
-    required this.controller,
-    required this.metric,
-  });
+  const _MetricChartCard({required this.controller, required this.metric});
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +123,10 @@ class _MetricChartCard extends StatelessWidget {
             return MetricBarChart(metric: metric, points: points);
           case ChartType.line:
           case ChartType.none:
-          return MetricLineChart(metric: metric, points: points);
+            return MetricLineChart(metric: metric, points: points);
         }
       },
+>>>>>>> c2ebb37 (Dashboard: unified line+bar chart layout, updated primary section)
     );
   }
 }

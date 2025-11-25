@@ -23,9 +23,8 @@ class FirebaseStatsService implements StatsService {
         .orderBy('priority', descending: false)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => StatMetric.fromDoc(doc))
-              .toList(),
+          (snapshot) =>
+              snapshot.docs.map((doc) => StatMetric.fromDoc(doc)).toList(),
         );
   }
 
@@ -47,7 +46,6 @@ class FirebaseStatsService implements StatsService {
     Query<Map<String, dynamic>> query =
         _metricDataRef.where('metricId', isEqualTo: metricId);
 
-    // Optional filters – safe and simple
     if (region != null) {
       query = query.where('region', isEqualTo: region);
     }
@@ -64,7 +62,7 @@ class FirebaseStatsService implements StatsService {
       );
     }
 
-    // No orderBy – Firestore will just return all matching docs.
+    // We don't order in Firestore – we sort in Dart where needed.
     return query.snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) => MetricPoint.fromDoc(doc))
@@ -74,29 +72,49 @@ class FirebaseStatsService implements StatsService {
 
   @override
   Stream<List<MetricWithLatest>> streamDashboardMetrics() {
-    // Simple implementation: whenever metric definitions change,
-    // fetch the latest datapoint for each metric ONCE.
+    // Whenever the metric definitions change, recompute
+    // "metric + latest datapoint" for each metric.
+    //
+    // IMPORTANT: no orderBy() here → no composite index required.
+    // We fetch all points for a metric, then sort in Dart and pick the last.
     return streamAllMetrics().asyncMap((metrics) async {
       final result = <MetricWithLatest>[];
 
       for (final metric in metrics) {
-        final latestSnap = await _metricDataRef
-            .where('metricId', isEqualTo: metric.id)
-            .orderBy('timestamp', descending: true)
-            .limit(1)
-            .get();
+        try {
+          final snap = await _metricDataRef
+              .where('metricId', isEqualTo: metric.id)
+              .get();
 
-        MetricPoint? latestPoint;
-        if (latestSnap.docs.isNotEmpty) {
-          latestPoint = MetricPoint.fromDoc(latestSnap.docs.first);
+          MetricPoint? latestPoint;
+
+          if (snap.docs.isNotEmpty) {
+            final points = snap.docs
+                .map((doc) => MetricPoint.fromDoc(doc))
+                .toList()
+              ..sort(
+                (a, b) => a.timestamp.compareTo(b.timestamp),
+              ); // oldest → newest
+
+            latestPoint = points.last; // newest value
+          }
+
+          result.add(
+            MetricWithLatest(
+              metric: metric,
+              latestPoint: latestPoint,
+            ),
+          );
+        } catch (_) {
+          // If anything goes wrong for this metric, still include it
+          // but with no latestPoint so the UI can show "--".
+          result.add(
+            MetricWithLatest(
+              metric: metric,
+              latestPoint: null,
+            ),
+          );
         }
-
-        result.add(
-          MetricWithLatest(
-            metric: metric,
-            latestPoint: latestPoint,
-          ),
-        );
       }
 
       return result;
