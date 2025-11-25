@@ -8,10 +8,7 @@ import 'package:gbv_awareness/features/dashboard/widgets/metric_bar_chart.dart';
 class DashboardPrimarySection extends StatelessWidget {
   final DashboardController controller;
 
-  const DashboardPrimarySection({
-    super.key,
-    required this.controller,
-  });
+  const DashboardPrimarySection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +51,20 @@ class DashboardPrimarySection extends StatelessWidget {
           return pa.compareTo(pb);
         });
 
+<<<<<<< HEAD
         // Enum-based filtering (ChartType from StatMetric)
         bool isLineMetric(MetricWithLatest m) =>
             m.metric.chartType == ChartType.line;
         bool isBarMetric(MetricWithLatest m) =>
             m.metric.chartType == ChartType.bar;
+=======
+            final chartWidgets = chartableMetrics
+                .map(
+                  (metric) =>
+                      _MetricChartCard(controller: controller, metric: metric),
+                )
+                .toList();
+>>>>>>> c2ebb37 (Dashboard: unified line+bar chart layout, updated primary section)
 
         List<MetricWithLatest> lineMetrics =
             withValue.where(isLineMetric).toList();
@@ -88,6 +94,7 @@ class DashboardPrimarySection extends StatelessWidget {
   }
 }
 
+<<<<<<< HEAD
 class _PrimarySkeleton extends StatelessWidget {
   const _PrimarySkeleton();
 
@@ -96,6 +103,30 @@ class _PrimarySkeleton extends StatelessWidget {
     return const SizedBox(
       height: 260,
       child: Center(child: CircularProgressIndicator()),
+=======
+class _MetricChartCard extends StatelessWidget {
+  final DashboardController controller;
+  final StatMetric metric;
+
+  const _MetricChartCard({required this.controller, required this.metric});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<MetricPoint>>(
+      stream: controller.metricPointsStream(metric.id),
+      builder: (context, snapshot) {
+        final points = snapshot.data ?? const [];
+
+        // Choose chart type based on metric.chartType
+        switch (metric.chartType) {
+          case ChartType.bar:
+            return MetricBarChart(metric: metric, points: points);
+          case ChartType.line:
+          case ChartType.none:
+            return MetricLineChart(metric: metric, points: points);
+        }
+      },
+>>>>>>> c2ebb37 (Dashboard: unified line+bar chart layout, updated primary section)
     );
   }
 }
