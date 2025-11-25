@@ -1,167 +1,208 @@
 // =================================
-// app_theme.dart — Calming Light Theme
+// app_theme.dart — GBV Awareness Theme (Updated for Flutter 3.22+)
 // =================================
 //
-// PURPOSE:
-// - Soothing, soft colors suitable for sensitive-content apps.
-// - Clean typography, gentle contrasts, accessibility-friendly.
-// - Rounded components, minimal shadows.
+// HOW TO USE:
+// 1. Import into main.dart:
+//      import 'package:your_app/theme/app_theme.dart';
+//
+// 2. Set as app theme:
+//      theme: AppTheme.light,
+//
+// 3. This theme uses the new M3 surface container system.
+//    No deprecated fields such as background/onBackground/surfaceVariant.
 //
 // =================================
 
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  static const _primary = Color(0xFF4A148C); // Deep Purple
+  static const _secondary = Color(0xFFD8C9FF); // Soft Lavender
+  static const _accent = Color(0xFFC2185B); // Deep Rose (CTA)
+  static const _bg = Color(0xFFF5EDE0); // Light Sand
+  static const _surface = Color(0xFFFAF8FC); // Near-white lavender
+  static const _dark = Color(0xFF1C1F26); // Charcoal/Navy
+
   static ThemeData light = ThemeData(
+    useMaterial3: true,
     brightness: Brightness.light,
 
     // --------------------------
-    // COLOR SYSTEM (Calm Palette)
+    // COLOR SYSTEM (M3-compliant)
     // --------------------------
-    colorScheme: ColorScheme.light(
-      primary: const Color(0xFF9C8DD8),      // soft lavender
-      secondary: const Color(0xFFB8AEEA),    // light pastel violet
-      surface: const Color(0xFFF9F8FF),      // ultra-light lavender white
-      surfaceTint: Colors.white,
-      background: const Color(0xFFFAFAFC),   // clean neutral white
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
+      primary: _primary,
       onPrimary: Colors.white,
-      onSecondary: Colors.white,
-      onBackground: const Color(0xFF2D2D2D),
-      onSurface: const Color(0xFF3B3B3B),
+      primaryContainer: Color(0xFF6A1B9A),
+      onPrimaryContainer: Colors.white,
+
+      secondary: _secondary,
+      onSecondary: _dark,
+      secondaryContainer: Color(0xFFEDE3FF),
+      onSecondaryContainer: _dark,
+
+      surface: _surface,
+      onSurface: Color(0xFF2D2D2D),
+
+      // New M3 fields replacing old background/surfaceVariant
+      surfaceContainerLowest: Color(0xFFFFFFFF),
+      surfaceContainerLow: Color(0xFFF8F4FA),
+      surfaceContainer: Color(0xFFF3ECF9),
+      surfaceContainerHigh: Color(0xFFE9E1F3),
+      surfaceContainerHighest: Color(0xFFE1D9ED),
+
+      outline: Color(0xFFB9AEE6),
+      outlineVariant: Color(0xFFE4DCF8),
+
+      error: Colors.red,
+      onError: Colors.white,
+      errorContainer: Color(0xFFFFDAD4),
+      onErrorContainer: Color(0xFF410002),
+
+      tertiary: _accent,
+      onTertiary: Colors.white,
+      tertiaryContainer: Color(0xFFF6C1D3),
+      onTertiaryContainer: Color(0xFF3B0015),
     ),
 
-    scaffoldBackgroundColor: const Color(0xFFF7F7FB),
+    scaffoldBackgroundColor: _bg,
 
     // --------------------------
-    // TYPOGRAPHY (Calming)
+    // TYPOGRAPHY (Montserat & Open Sans)
     // --------------------------
+    fontFamily: "OpenSans",
     textTheme: const TextTheme(
+      // Headings use Montserrat
       headlineLarge: TextStyle(
-        fontSize: 32,
+        fontFamily: "Montserrat",
+        fontSize: 34,
         fontWeight: FontWeight.w700,
-        color: Color(0xFF2B2B2B),
-        height: 1.25,
+        height: 1.35,
+        color: _dark,
       ),
       headlineMedium: TextStyle(
-        fontSize: 26,
+        fontFamily: "Montserrat",
+        fontSize: 28,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF2B2B2B),
-        height: 1.3,
-      ),
-      titleLarge: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF363636),
         height: 1.35,
+        color: _dark,
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: Color(0xFF444444),
-        height: 1.5,
+      headlineSmall: TextStyle(
+        fontFamily: "Montserrat",
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        height: 1.35,
+        color: _dark,
       ),
+
+      // Body text uses Open Sans
+      bodyLarge: TextStyle(fontSize: 16, height: 1.6, color: Color(0xFF3B3B3B)),
       bodyMedium: TextStyle(
         fontSize: 15,
+        height: 1.55,
         color: Color(0xFF505050),
-        height: 1.5,
       ),
       bodySmall: TextStyle(
         fontSize: 13,
+        height: 1.50,
         color: Color(0xFF666666),
-        height: 1.45,
       ),
     ),
 
-    // -----------------------------------
-    // BUTTONS — Rounded & Friendly
-    // -----------------------------------
+    // --------------------------
+    // APP BAR
+    // --------------------------
+    appBarTheme: const AppBarTheme(
+      backgroundColor: _primary,
+      foregroundColor: Colors.white,
+      centerTitle: true,
+      elevation: 0,
+      titleTextStyle: TextStyle(
+        fontFamily: "Montserrat",
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+    ),
+
+    // --------------------------
+    // BUTTONS (Deep Rose CTA)
+    // --------------------------
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF9C8DD8), // lavender
+        backgroundColor: _accent,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        textStyle: const TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          height: 1.2,
         ),
-        elevation: 0,
+        elevation: 1,
       ),
     ),
 
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: const Color(0xFF7F76C5),
+        foregroundColor: _primary,
         textStyle: const TextStyle(
-          fontSize: 15,
           fontWeight: FontWeight.w500,
+          fontSize: 15,
+          height: 1.2,
         ),
       ),
     ),
 
-    // -----------------------------------
-    // INPUTS — Soft Borders
-    // -----------------------------------
+    // --------------------------
+    // INPUT FIELDS (soft lavender borders)
+    // --------------------------
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: const Color(0xFFF3F1FF),
+      fillColor: const Color(0xFFF3EBFF),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color(0xFFDAD4F0)),
+        borderSide: const BorderSide(color: Color(0xFFD3C6F4)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: Color(0xFFD3C6F4)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color(0xFFAA9BEB), width: 2),
+        borderSide: const BorderSide(color: _primary, width: 2),
       ),
-      hintStyle: const TextStyle(color: Color(0xFF8A85A6)),
+      hintStyle: const TextStyle(color: Color(0xFF8D86A7)),
     ),
 
-    // -----------------------------------
-    // CARDS — Soft Surfaces
-    // -----------------------------------
-    cardTheme: const CardThemeData(
-  color: Color(0xFFFDFCFF),
-  elevation: 0,
-  shadowColor: Colors.transparent,
-  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(16)),
-  ),
-),
+    // --------------------------
+    // CARDS (soft surfaces)
+    // --------------------------
+    // cardTheme: CardTheme(
+    //   color: _surface,
+    //   elevation: 1,
+    //   shadowColor: const Color(0x11000000),
+    //   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    // ),
 
-
-    // -----------------------------------
-    // APP BAR — Minimal & Soft
-    // -----------------------------------
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFF9F8FF),
-      elevation: 0,
-      foregroundColor: Color(0xFF3A3A3A),
-      titleTextStyle: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF3A3A3A),
-      ),
-    ),
-
-    // -----------------------------------
+    // --------------------------
     // ICONS
-    // -----------------------------------
-    iconTheme: const IconThemeData(
-      color: Color(0xFF6B66A6),
-    ),
+    // --------------------------
+    iconTheme: const IconThemeData(color: _primary),
 
-    // -----------------------------------
-    // CHIP STYLE
-    // -----------------------------------
+    // --------------------------
+    // CHIPS
+    // --------------------------
     chipTheme: ChipThemeData(
-      backgroundColor: const Color(0xFFEDEAFF),
-      selectedColor: const Color(0xFFCEC5F3),
-      labelStyle: const TextStyle(
-        color: Color(0xFF4A47A3),
-      ),
+      backgroundColor: const Color(0xFFE0D4FF),
+      selectedColor: const Color(0xFFCFBBFF),
+      labelStyle: const TextStyle(fontSize: 14, color: _dark),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );
 }

@@ -1,0 +1,103 @@
+[{
+  "id": "main_product",
+  "name": "Example Product Name",
+  "description": "Long supportive description about how this product helps users access information, feel supported, and navigate options at their own pace.",
+  "imageUrl": null,
+  "features": [
+    { "title": "Feature One", "description": "Brief, supportive explanation of what this feature offers." },
+    { "title": "Feature Two", "description": "Another gentle, user-focused feature description." }
+  ],
+  "updatedAt": "2025-01-15T12:00:00Z",
+  "version": "1.0.0"
+},
+  {
+    "id": "gbv_aware_hub",
+    "name": "GBV Aware Hub",
+    "slug": "gbv-aware-hub",
+    "shortDescription": "A central hub for trauma-informed GBV awareness, resources, and support.",
+    "longDescription": "The GBV Aware Hub brings together learning, stories, and support in one trauma-informed digital space. It is designed to help communities understand GBV, find trustworthy resources, and connect with support services in a safe and respectful way.",
+    "icon": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b",
+    "heroImageUrl": "https://images.unsplash.com/photo-1515169067865-5387ec356754",
+    "pillars": [
+      "Awareness & Education",
+      "Safe Access to Information",
+      "Connection to Support Services"
+    ],
+    "ctaLabel": "Explore the Hub",
+    "ctaUrl": "https://example.org/gbv-aware-hub",
+    "isFeatured": true,
+    "order": 1
+  },
+  {
+    "id": "real_time_dashboard",
+    "name": "Real-Time GBV Insights Dashboard",
+    "slug": "real-time-gbv-insights-dashboard",
+    "shortDescription": "A live, anonymised dashboard that visualises GBV-related trends and support activity.",
+    "longDescription": "The Real-Time GBV Insights Dashboard offers anonymised, high-level data to help organisations and communities understand trends in support-seeking, outreach engagement, and service usage. The dashboard avoids graphic content and focuses on context, care, and responsible interpretation.",
+    "icon": "https://images.unsplash.com/photo-1553877522-43269d4ea984",
+    "heroImageUrl": "https://images.unsplash.com/photo-1553877522-43269d4ea984",
+    "pillars": [
+      "Data for Action",
+      "Contextualised Insights",
+      "Ethical and Safe Visualisation"
+    ],
+    "ctaLabel": "View Dashboard",
+    "ctaUrl": "https://example.org/dashboard",
+    "isFeatured": true,
+    "order": 2
+  },
+  {
+    "id": "support_directory",
+    "name": "Support Services Directory",
+    "slug": "support-services-directory",
+    "shortDescription": "A curated directory of hotlines, shelters, NGOs, and community resources.",
+    "longDescription": "The Support Services Directory offers a carefully curated list of hotlines, shelters, legal clinics, psychosocial services, and community organisations. The focus is on accessibility, clarity, and trauma-sensitive descriptions that help users choose what feels safest for them.",
+    "icon": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+    "heroImageUrl": "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a",
+    "pillars": [
+      "Safe Navigation",
+      "Trusted Organisations",
+      "Multiple Support Channels"
+    ],
+    "ctaLabel": "Find Support",
+    "ctaUrl": "https://example.org/support-directory",
+    "isFeatured": false,
+    "order": 3
+  },
+  {
+    "id": "learning_journeys",
+    "name": "Guided Learning Journeys",
+    "slug": "guided-learning-journeys",
+    "shortDescription": "Structured learning paths on GBV awareness, allyship, and safer responses.",
+    "longDescription": "Guided Learning Journeys are structured, step-by-step modules that help people deepen their understanding of GBV, learn how to respond in supportive ways, and practise allyship. Content is paced gently, using real-world scenarios and reflection prompts.",
+    "icon": "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d",
+    "heroImageUrl": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+    "pillars": [
+      "Self-Paced Learning",
+      "Trauma-Informed Content",
+      "Practical Skills for Everyday Life"
+    ],
+    "ctaLabel": "Start Learning",
+    "ctaUrl": "https://example.org/learning-journeys",
+    "isFeatured": false,
+    "order": 4
+  },
+  {
+    "id": "anonymous_check_in_tool",
+    "name": "Anonymous Check-In Tool",
+    "slug": "anonymous-check-in-tool",
+    "shortDescription": "A gentle, anonymous tool to help people reflect on how they are feeling and access tailored information.",
+    "longDescription": "The Anonymous Check-In Tool offers a quiet space where people can answer a few reflective questions, receive supportive messages, and see suggestions for resources that may be helpful. No identifying details are required, and users decide whether to reach out further.",
+    "icon": "https://images.unsplash.com/photo-1525182008055-f88b95ff7980",
+    "heroImageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+    "pillars": [
+      "Gentle Self-Reflection",
+      "Non-Judgmental Support",
+      "Bridging Awareness and Help-Seeking"
+    ],
+    "ctaLabel": "Check In With Yourself",
+    "ctaUrl": "https://example.org/check-in",
+    "isFeatured": false,
+    "order": 5
+  }
+]

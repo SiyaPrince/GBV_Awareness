@@ -1,0 +1,75 @@
+[
+  {
+    "id": "testimonial_1",
+    "name": "Jane Doe",
+    "role": "Community Advocate",
+    "message": "This platform helped me find clear information and support options at a time when I felt unsure of where to start.",
+    "imageUrl": null,
+    "rating": 5,
+    "timestamp": "2025-01-10T10:00:00Z"
+  },
+  {
+    "id": "testimonial_2",
+    "name": "Alex",
+    "role": null,
+    "message": "I appreciated that I could explore resources quietly and at my own pace, without feeling pressured.",
+    "imageUrl": null,
+    "rating": 4,
+    "timestamp": "2025-01-12T09:30:00Z"
+  },
+  {
+    "id": "testimonial_survivor_001",
+    "quote": "Finding information here helped me understand my options without feeling rushed or judged. It was the first time I felt like a platform was speaking to me gently.",
+    "name": "Anonymous Survivor",
+    "role": "Platform User",
+    "organisation": "Community Member",
+    "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+    "order": 1,
+    "isFeatured": true,
+    "rating": 5
+  },
+  {
+    "id": "testimonial_counsellor_001",
+    "quote": "This platform helps us prepare clients before they arrive. They come in with clearer questions and a better sense of their own boundaries.",
+    "name": "Thandi",
+    "role": "Counsellor",
+    "organisation": "Local Support Centre",
+    "avatarUrl": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1",
+    "order": 2,
+    "isFeatured": true,
+    "rating": 5
+  },
+  {
+    "id": "testimonial_advocate_001",
+    "quote": "The dashboard allows us to speak about trends without exposing anyone’s story. It keeps the focus on systems and responses, not on blame.",
+    "name": "Lebo",
+    "role": "Community Advocate",
+    "organisation": "GBV Action Network",
+    "avatarUrl": "https://images.unsplash.com/photo-1544723795-3fb6469f5b39",
+    "order": 3,
+    "isFeatured": false,
+    "rating": 4
+  },
+  {
+    "id": "testimonial_volunteer_001",
+    "quote": "The learning journeys gave me practical language for supporting friends and neighbours. I feel more confident responding with care.",
+    "name": "Amina",
+    "role": "Volunteer",
+    "organisation": "Community Outreach Collective",
+    "avatarUrl": "https://images.unsplash.com/photo-1544723795-432537d12f6c",
+    "order": 4,
+    "isFeatured": false,
+    "rating": 5
+  },
+  {
+    "id": "testimonial_partner_org_001",
+    "quote": "We use the platform to share verified information with our community. It has become a trusted reference point for our team.",
+    "name": "Sipho",
+    "role": "Programme Manager",
+    "organisation": "Hope & Healing Initiative",
+    "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
+    "order": 5,
+    "isFeatured": false,
+    "rating": 4
+  }
+]

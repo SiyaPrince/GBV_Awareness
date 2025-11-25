@@ -1,0 +1,242 @@
+[
+  {
+    "metricId": "reports_monthly",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 240,
+    "region": "Central",
+    "breakdown": { "adults": 180, "youth": 60 },
+    "notes": "Higher visibility campaign this month."
+  },
+  {
+    "metricId": "hotline_calls_daily",
+    "timestamp": "2025-02-05T12:00:00Z",
+    "value": 95,
+    "region": "North",
+    "breakdown": { "first_time": 60, "repeat": 35 },
+    "notes": "Increase during awareness week."
+  },
+  {
+    "metricId": "resolutions_weekly",
+    "timestamp": "2025-02-03T12:00:00Z",
+    "value": 42,
+    "region": "South",
+    "breakdown": { "guided": 30, "referred": 12 },
+    "notes": "Improved coordination with local partners."
+  },
+  {
+    "metricId": "shelter_capacity",
+    "timestamp": "2025-02-02T12:00:00Z",
+    "value": 78,
+    "region": "Central",
+    "breakdown": { "women": 45, "children": 33 },
+    "notes": "Temporary surge in accommodation requests."
+  },
+  {
+    "metricId": "online_chats_volume",
+    "timestamp": "2025-02-04T12:00:00Z",
+    "value": 62,
+    "region": "Online",
+    "breakdown": { "mobile": 40, "desktop": 22 },
+    "notes": "Increased evening traffic."
+  },
+  {
+    "metricId": "legal_inquiries_monthly",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 120,
+    "region": "National",
+    "breakdown": { "info": 95, "referral": 25 },
+    "notes": "More inquiries following outreach sessions."
+  },
+  {
+    "metricId": "community_workshops_attendance",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 180,
+    "region": "East",
+    "breakdown": { "in_person": 140, "online": 40 },
+    "notes": "Workshops fully booked."
+  },
+  {
+    "metricId": "support_followups_completed",
+    "timestamp": "2025-02-03T12:00:00Z",
+    "value": 58,
+    "region": "West",
+    "breakdown": { "phone": 30, "in_person": 28 },
+    "notes": "Steady follow-up activity."
+  },
+  {
+    "metricId": "website_resource_clicks",
+    "timestamp": "2025-02-05T12:00:00Z",
+    "value": 305,
+    "region": "Online",
+    "breakdown": { "articles": 180, "resources": 125 },
+    "notes": "New content published."
+  },
+  {
+    "metricId": "regional_support_requests",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 265,
+    "region": "Central",
+    "breakdown": { "walk_in": 95, "online": 170 },
+    "notes": "Increase in online submissions."
+  },
+  {
+    "metricId": "community_outreach_events",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 42,
+    "region": "National",
+    "breakdown": { "urban": 25, "rural": 17 },
+    "notes": "Strong attendance across regions."
+  },
+  {
+    "metricId": "survivor_support_sessions",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 130,
+    "region": "National",
+    "breakdown": { "in-person": 80, "online": 50 },
+    "notes": "More survivors opting for hybrid sessions."
+  },
+  {
+    "metricId": "legal_aid_requests",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 62,
+    "region": "National",
+    "breakdown": { "consultations": 40, "documentation": 22 },
+    "notes": "Increased demand following legal awareness campaign."
+  },
+  {
+    "metricId": "hotline_daily_calls",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 95,
+    "region": "National",
+    "breakdown": null,
+    "notes": "Higher weekend call volume observed."
+  },
+  {
+    "metricId": "digital_reports_received",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 33,
+    "region": "Online",
+    "breakdown": { "web": 20, "mobile": 13 },
+    "notes": "Increase in mobile submissions."
+  },
+  {
+    "metricId": "community_training_sessions",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 14,
+    "region": "National",
+    "breakdown": { "youth": 7, "adults": 7 },
+    "notes": "Balanced interest across age groups."
+  },
+  {
+    "metricId": "awareness_campaign_reach",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 4500,
+    "region": "National",
+    "breakdown": { "social": 3200, "events": 1300 },
+    "notes": "Successful social media amplification."
+  },
+  {
+    "metricId": "support_group_sessions",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 18,
+    "region": "National",
+    "breakdown": { "women": 12, "youth": 6 },
+    "notes": "Steady attendance."
+  },
+  {
+    "metricId": "youth_program_participation",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 75,
+    "region": "Schools",
+    "breakdown": { "primary": 40, "secondary": 35 },
+    "notes": "Growing interest among younger students."
+  },
+  {
+    "metricId": "mental_health_referrals",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 58,
+    "region": "National",
+    "breakdown": null,
+    "notes": "Seasonal increase observed."
+  },
+  {
+    "metricId": "case_followups_completed",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 36,
+    "region": "National",
+    "breakdown": null,
+    "notes": "Follow-up efficiency improving."
+  },
+  {
+    "metricId": "transport_assistance_requests",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 19,
+    "region": "National",
+    "breakdown": null,
+    "notes": "Slight rise attributed to new transportation partner."
+  },
+  {
+    "metricId": "mobile_app_active_users",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 870,
+    "region": "Online",
+    "breakdown": null,
+    "notes": "Majority of usage occurs during evenings."
+  },
+  {
+    "metricId": "women_safe_spaces_attendance",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 55,
+    "region": "Community",
+    "breakdown": null,
+    "notes": "Consistent participation week-over-week."
+  },
+  {
+    "metricId": "school_awareness_sessions",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 22,
+    "region": "Schools",
+    "breakdown": { "primary": 10, "secondary": 12 },
+    "notes": "Two new schools joined the program."
+  },
+  {
+    "metricId": "anonymous_chat_sessions",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 105,
+    "region": "Online",
+    "breakdown": null,
+    "notes": "Mostly evening conversations."
+  },
+  {
+    "metricId": "resource_downloads",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 410,
+    "region": "Online",
+    "breakdown": { "guides": 250, "posters": 160 },
+    "notes": "Posters rising in popularity."
+  },
+  {
+    "metricId": "referrals_to_shelters",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 24,
+    "region": "National",
+    "breakdown": null,
+    "notes": "Slight increase due to winter season."
+  },
+  {
+    "metricId": "volunteer_signups",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 48,
+    "region": "National",
+    "breakdown": null,
+    "notes": "New campaign improved visibility."
+  },
+  {
+    "metricId": "social_media_engagement",
+    "timestamp": "2025-02-01T12:00:00Z",
+    "value": 6200,
+    "region": "Online",
+    "breakdown": { "likes": 3500, "shares": 1400, "comments": 1300 },
+    "notes": "High engagement on safety-related posts."
+  }
+]

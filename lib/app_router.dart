@@ -14,7 +14,8 @@
 // DO NOT add UI code here — this file is for routing only.
 // =================================
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
+import 'package:gbv_awareness/features/dashboard/pages/dashboard_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
@@ -26,12 +27,10 @@ import 'features/info/blog_list_page.dart';
 import 'features/info/blog_detail_page.dart';
 import 'features/info/article_list_page.dart';
 import 'features/info/article_detail_page.dart';
-import 'features/info/dashboard_page.dart';
 
 // PRODUCT SECTION
 import 'features/product/product_overview_page.dart';
 import 'features/product/features_page.dart';
-import 'features/product/how_it_works_page.dart';
 import 'features/product/testimonials_page.dart';
 import 'features/product/faq_page.dart';
 
@@ -55,14 +54,8 @@ final appRouter = GoRouter(
         // -------------------------
         // CORE / TOP-LEVEL
         // -------------------------
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
-          path: '/about',
-          builder: (context, state) => const AboutPage(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => const HomePage()),
+        GoRoute(path: '/about', builder: (context, state) => const AboutPage()),
 
         // -------------------------
         // INFORMATION HUB
@@ -93,10 +86,10 @@ final appRouter = GoRouter(
               ArticleDetailPage(id: state.pathParameters['id']!),
         ),
 
-        GoRoute(
-          path: '/info/dashboard',
-          builder: (context, state) => const DashboardPage(),
-        ),
+        // GoRoute(
+        //   path: '/info/dashboard',
+        //   builder: (context, state) => const DashboardPage(),
+        // ),
 
         // -------------------------
         // PRODUCT SECTION
@@ -107,19 +100,19 @@ final appRouter = GoRouter(
         ),
         GoRoute(
           path: '/product/features',
-          builder: (context, state) => const FeaturesPage(),
+          builder: (context, state) => const ProductFeaturesPage(),
         ),
-        GoRoute(
-          path: '/product/how-it-works',
-          builder: (context, state) => const HowItWorksPage(),
-        ),
+        // GoRoute(
+        //   path: '/product/how-it-works',
+        //   builder: (context, state) => const HowItWorksPage(),
+        // ),
         GoRoute(
           path: '/product/testimonials',
-          builder: (context, state) => const TestimonialsPage(),
+          builder: (context, state) => const ProductTestimonialsPage(),
         ),
         GoRoute(
           path: '/product/faq',
-          builder: (context, state) => const FAQPage(),
+          builder: (context, state) => const ProductFaqPage(),
         ),
 
         // -------------------------
@@ -141,9 +134,14 @@ final appRouter = GoRouter(
           path: '/privacy',
           builder: (context, state) => const PrivacyPolicyPage(),
         ),
+        GoRoute(path: '/terms', builder: (context, state) => const TermsPage()),
+
+        // -------------------------
+        // Dashboard
+        // -------------------------
         GoRoute(
-          path: '/terms',
-          builder: (context, state) => const TermsPage(),
+          path: '/dashboard',
+          builder: (context, state) => const DashboardPage(),
         ),
       ],
     ),

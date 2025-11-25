@@ -1,0 +1,80 @@
+[
+  {
+    "id": "faq_1",
+    "question": "What is this platform for?",
+    "answer": "This platform is designed to share information, offer gentle guidance, and help connect people to support in a way that feels safe and respectful.",
+    "category": "General",
+    "order": 1
+  },
+  {
+    "id": "faq_2",
+    "question": "Is my information kept private?",
+    "answer": "We take privacy seriously and aim to collect as little personal information as possible. When information is shared, it is handled with care and only used to provide support.",
+    "category": "Safety & Privacy",
+    "order": 2
+  },
+  {
+    "id": "faq_what_is_platform",
+    "question": "What is this platform for?",
+    "answer": "This platform exists to offer gentle, trauma-informed information about GBV, connect people to support, and help communities build safer responses. It is not an emergency service, but it can help you find the right services for your situation.",
+    "category": "General",
+    "order": 1,
+    "isHighlighted": true
+  },
+  {
+    "id": "faq_is_it_anonymous",
+    "question": "Is my activity on this platform anonymous?",
+    "answer": "Most learning and browsing features can be used without sharing personal details. Certain tools may ask for information only when it is needed to connect you to support. Where possible, we explain clearly what is collected and why.",
+    "category": "Privacy & Safety",
+    "order": 2,
+    "isHighlighted": true
+  },
+  {
+    "id": "faq_emergency_help",
+    "question": "What should I do in an emergency?",
+    "answer": "If you or someone else is in immediate danger, please contact your local emergency number or trusted emergency service as soon as it is safe to do so. This platform cannot replace emergency services, but it can help you learn about support options.",
+    "category": "Safety",
+    "order": 3,
+    "isHighlighted": true
+  },
+  {
+    "id": "faq_who_is_it_for",
+    "question": "Who is this platform designed for?",
+    "answer": "The platform is designed for survivors, friends, family members, community members, and service providers who want clearer information, supportive tools, and safer ways to learn about GBV and responses.",
+    "category": "General",
+    "order": 4,
+    "isHighlighted": false
+  },
+  {
+    "id": "faq_data_use",
+    "question": "How is my data used?",
+    "answer": "We aim to collect as little personal information as possible. When we use data, it is usually to improve services, understand trends, or connect people to support. Any analytics or dashboards use anonymised and aggregated information.",
+    "category": "Privacy & Safety",
+    "order": 5,
+    "isHighlighted": false
+  },
+  {
+    "id": "faq_dashboard_sensitivity",
+    "question": "Is the real-time dashboard safe to view?",
+    "answer": "Yes. The dashboard uses anonymised, high-level data. It does not display graphic content or identifying details. The focus is on trends and context, not individual stories.",
+    "category": "Dashboard",
+    "order": 6,
+    "isHighlighted": false
+  },
+  {
+    "id": "faq_can_i_share",
+    "question": "Can I share resources from this platform with others?",
+    "answer": "Yes. Many resources are designed to be shared, especially educational materials and awareness content. When sharing, please keep the safety and privacy of others in mind.",
+    "category": "Usage",
+    "order": 7,
+    "isHighlighted": false
+  },
+  {
+    "id": "faq_get_involved",
+    "question": "How can I get involved or support this work?",
+    "answer": "You can support this work by sharing verified information, listening with care when people open up, volunteering with trusted organisations, and using the platform to learn more about safer responses.",
+    "category": "Community",
+    "order": 8,
+    "isHighlighted": false
+  }
+]
