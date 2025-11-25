@@ -15,11 +15,7 @@
 // =================================
 
 // import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:gbv_awareness/features/dashboard/pages/dashboard_page.dart';
-=======
-import 'package:gbv_awareness/features/product/testimonies_body.dart';
->>>>>>> a20a1f96af3ec0949c8884b6d072f75a63bee7c6
 import 'package:go_router/go_router.dart';
 
 import 'features/home/home_page.dart';
